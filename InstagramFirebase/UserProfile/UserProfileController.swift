@@ -41,10 +41,6 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
             
             do{
                 try Auth.auth().signOut()
-                
-                
-                
-                
             } catch let signOutErr {
                 print("Failed to sign out for some reason:", signOutErr)
             }
