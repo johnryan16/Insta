@@ -50,6 +50,8 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
     let emailTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Email"
+        tf.keyboardType = UIKeyboardType.emailAddress
+        tf.autocapitalizationType = UITextAutocapitalizationType.none
         tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
         tf.borderStyle = .roundedRect
         tf.font = UIFont.systemFont(ofSize: 14)
@@ -72,6 +74,8 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
     let usernameTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Username"
+        tf.keyboardType = UIKeyboardType.emailAddress
+        tf.autocapitalizationType = UITextAutocapitalizationType.none
         tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
         tf.borderStyle = .roundedRect
         tf.font = UIFont.systemFont(ofSize: 14)
@@ -146,6 +150,12 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
                         return
                     }
                     print("Successfully Saved user to DB")
+                    
+                    guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { return }
+                    
+                    mainTabBarController.setupViewControllers()
+                    
+                    self.dismiss(animated: true, completion: nil)
                 })
             })
         }
