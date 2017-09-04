@@ -22,6 +22,8 @@ class UserProfileHeader: UICollectionViewCell {
     
     let profileImageView: UIImageView = {
         let iv = UIImageView()
+        iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
         return iv
     }()
     
