@@ -11,6 +11,8 @@
 		1B3DE00F1F5DC4A2007E3CD9 /* PhotoSelectorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3DE00E1F5DC4A2007E3CD9 /* PhotoSelectorCell.swift */; };
 		1B51A6891F5DD07E008498C9 /* PhotoSelectorHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B51A6881F5DD07E008498C9 /* PhotoSelectorHeader.swift */; };
 		1B65701E1F5DFCA600EC1ECD /* SharePhotoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B65701D1F5DFCA600EC1ECD /* SharePhotoController.swift */; };
+		1B6570211F5E3EB900EC1ECD /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6570201F5E3EB900EC1ECD /* Post.swift */; };
+		1B6570231F5E416900EC1ECD /* UserProfilePhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6570221F5E416900EC1ECD /* UserProfilePhotoCell.swift */; };
 		1BA17D8E1F58849200837AF1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA17D8D1F58849200837AF1 /* AppDelegate.swift */; };
 		1BA17D901F58849200837AF1 /* SignUpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA17D8F1F58849200837AF1 /* SignUpController.swift */; };
 		1BA17D931F58849200837AF1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BA17D911F58849200837AF1 /* Main.storyboard */; };
@@ -31,6 +33,8 @@
 		1B3DE00E1F5DC4A2007E3CD9 /* PhotoSelectorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSelectorCell.swift; sourceTree = "<group>"; };
 		1B51A6881F5DD07E008498C9 /* PhotoSelectorHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSelectorHeader.swift; sourceTree = "<group>"; };
 		1B65701D1F5DFCA600EC1ECD /* SharePhotoController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharePhotoController.swift; sourceTree = "<group>"; };
+		1B6570201F5E3EB900EC1ECD /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
+		1B6570221F5E416900EC1ECD /* UserProfilePhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfilePhotoCell.swift; sourceTree = "<group>"; };
 		1BA17D8A1F58849200837AF1 /* InstagramFirebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InstagramFirebase.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BA17D8D1F58849200837AF1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1BA17D8F1F58849200837AF1 /* SignUpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpController.swift; sourceTree = "<group>"; };
@@ -79,6 +83,14 @@
 			path = AddPhoto;
 			sourceTree = "<group>";
 		};
+		1B65701F1F5E3EA900EC1ECD /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1B6570201F5E3EB900EC1ECD /* Post.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		1BA17D811F58849200837AF1 = {
 			isa = PBXGroup;
 			children = (
@@ -100,6 +112,7 @@
 		1BA17D8C1F58849200837AF1 /* InstagramFirebase */ = {
 			isa = PBXGroup;
 			children = (
+				1B65701F1F5E3EA900EC1ECD /* Models */,
 				1B1C4A461F5CC08F00B60604 /* AddPhoto */,
 				1BE9FBEC1F592EE8000F3B65 /* Login */,
 				1BE9FBE91F58DDFD000F3B65 /* UserProfile */,
@@ -128,6 +141,7 @@
 			children = (
 				1BE9FBE71F58CFA8000F3B65 /* UserProfileController.swift */,
 				1BE9FBEA1F58DE11000F3B65 /* UserProfileHeader.swift */,
+				1B6570221F5E416900EC1ECD /* UserProfilePhotoCell.swift */,
 			);
 			path = UserProfile;
 			sourceTree = "<group>";
@@ -276,7 +290,9 @@
 				1B65701E1F5DFCA600EC1ECD /* SharePhotoController.swift in Sources */,
 				1BA17D901F58849200837AF1 /* SignUpController.swift in Sources */,
 				1B3DE00F1F5DC4A2007E3CD9 /* PhotoSelectorCell.swift in Sources */,
+				1B6570211F5E3EB900EC1ECD /* Post.swift in Sources */,
 				1BA17DA11F5890B600837AF1 /* Extensions.swift in Sources */,
+				1B6570231F5E416900EC1ECD /* UserProfilePhotoCell.swift in Sources */,
 				1BE9FBE61F58CE49000F3B65 /* MainTabBarController.swift in Sources */,
 				1BE9FBEB1F58DE11000F3B65 /* UserProfileHeader.swift in Sources */,
 				1BE9FBE81F58CFA8000F3B65 /* UserProfileController.swift in Sources */,
