@@ -9,6 +9,8 @@
 import UIKit
 import Firebase
 
+
+
 class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     let cellId = "cellId"
@@ -34,31 +36,32 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     fileprivate func fetchPosts() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        let ref = Database.database().reference().child("posts").child(uid)
         
+        Database.fetchUserWithUID(uid: uid) { (user) in
+            self.fetchPostsWithUser(user: user)
+        }
+    }
+    
+    fileprivate func fetchPostsWithUser(user: User) {
+        
+        let ref = Database.database().reference().child("posts").child(user.uid)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             
             guard let dictionaries = snapshot.value as? [String: Any] else { return }
             
             dictionaries.forEach({ (key, value) in
-                
                 guard let dictionary = value as? [String: Any] else { return }
-                
                 let imageUrl = dictionary["imageUrl"] as? String
                 print("Image URL: \(imageUrl ?? "")")
                 
-                let post = Post(dictionary: dictionary)
-                
+                let post = Post(user: user, dictionary: dictionary)
                 self.posts.append(post)
             })
-            
             self.collectionView?.reloadData()
-            
         }) { (err) in
             print("Falied to fetch posts:", err)
         }
     }
-    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         var height: CGFloat = 40 + 8 + 8 //username & userprofileImageView
