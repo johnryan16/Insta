@@ -17,23 +17,37 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView?.backgroundColor = .white
         
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleUpdateFeed), name: SharePhotoController.updateFeedNotificationName, object: nil)
+        collectionView?.backgroundColor = .white
         collectionView?.register(HomePostCell.self, forCellWithReuseIdentifier: cellId)
+        
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        collectionView?.refreshControl = refreshControl
         
         setupNavigationItems()
         
-        fetchPosts()
-        
-        fetchFollowingUserIds()
-        
+        fetchAllPosts()
         
     }
     
+    @objc func handleUpdateFeed() {
+        handleRefresh()
+    }
+    
+    @objc func handleRefresh() {
+        posts.removeAll()
+        fetchAllPosts()
+    }
+    fileprivate func fetchAllPosts() {
+        fetchPosts()
+        fetchFollowingUserIds()
+    }
     fileprivate func fetchFollowingUserIds() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         Database.database().reference().child("following").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
-            
             guard let userIdsDictionary = snapshot.value as? [String: Any] else { return }
             
             userIdsDictionary.forEach({ (key, value) in
@@ -41,12 +55,10 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
                     self.fetchPostsWithUser(user: user)
                 })
             })
-            
         }) { (err) in
             print("Failed to fetch following user id's", err)
         }
     }
-    
     func setupNavigationItems() {
         navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "Instagram_logo_black"))
         navigationItem.titleView?.contentMode = .scaleAspectFit
@@ -67,6 +79,8 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         let ref = Database.database().reference().child("posts").child(user.uid)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
             
+            self.collectionView?.refreshControl?.endRefreshing()
+            
             guard let dictionaries = snapshot.value as? [String: Any] else { return }
             
             dictionaries.forEach({ (key, value) in
@@ -81,7 +95,6 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
             self.posts.sort(by: { (p1, p2) -> Bool in
                 return p1.creationDate.compare(p2.creationDate) == .orderedDescending
             })
-            
             self.collectionView?.reloadData()
         }) { (err) in
             print("Falied to fetch posts:", err)
@@ -105,9 +118,6 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! HomePostCell
         
         cell.post = posts[indexPath.item]
-        
-        
-        
         return cell
     }
 }

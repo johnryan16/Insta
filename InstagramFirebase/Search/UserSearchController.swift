@@ -81,7 +81,7 @@ class UserSearchController: UICollectionViewController, UICollectionViewDelegate
         
         let ref = Database.database().reference().child("users")
         ref.observe(.value, with: { (snapshot) in
-            print(snapshot.value)
+            print(snapshot.value ?? "")
             
             guard let dictionaries = snapshot.value as? [String: Any] else { return }
             
