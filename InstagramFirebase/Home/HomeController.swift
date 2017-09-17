@@ -62,6 +62,15 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     func setupNavigationItems() {
         navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "Instagram_logo_black"))
         navigationItem.titleView?.contentMode = .scaleAspectFit
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "camera3").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleCamera))
+    }
+    
+    @objc func handleCamera() {
+        print("Showing Camera")
+        
+        let cameraController = CameraController()
+        present(cameraController, animated: true, completion: nil)
     }
     
     var posts = [Post]()
