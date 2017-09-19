@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 
 
-class CameraController: UIViewController {
+class CameraController: UIViewController, AVCapturePhotoCaptureDelegate {
     
     let dismissButton: UIButton = {
         let button = UIButton(type: .system)
@@ -32,15 +32,10 @@ class CameraController: UIViewController {
         return button
     }()
     
-    @objc func handleCapturePhoto() {
-        print("Capturing Photo")
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupCaptureSession()
-        
         setupHUD()
         
     }
@@ -53,6 +48,29 @@ class CameraController: UIViewController {
         view.addSubview(dismissButton)
         dismissButton.anchor(top: view.topAnchor, left: nil, bottom: nil, right: view.rightAnchor, paddingTop: 12, paddingLeft: 0, paddingBottom: 0, paddingRight: 12, width: 50, height: 50)
     }
+    
+    @objc func handleCapturePhoto() {
+        print("Capturing Photo")
+        let settings = AVCapturePhotoSettings()
+        
+        output.capturePhoto(with: settings, delegate: self)
+    }
+    
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        
+        let imageData = photo.fileDataRepresentation()
+        
+        let previewImage = UIImage(data: imageData!)
+        
+        let previewImageView = UIImageView(image: previewImage)
+        
+        view.addSubview(previewImageView)
+        previewImageView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        
+        print("Finished processing photo sample buffer.")
+    }
+    
+    let output = AVCapturePhotoOutput()
     
     fileprivate func setupCaptureSession() {
         let captureSession = AVCaptureSession()
@@ -71,11 +89,9 @@ class CameraController: UIViewController {
         }
         
         //2.) Setup Outputs
-        let output = AVCapturePhotoOutput()
         if captureSession.canAddOutput(output) {
             captureSession.addOutput(output)
         }
-        
         
         //3.) Setup output preview
         
