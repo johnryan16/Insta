@@ -97,7 +97,8 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
                 let imageUrl = dictionary["imageUrl"] as? String
                 print("Image URL: \(imageUrl ?? "")")
                 
-                let post = Post(user: user, dictionary: dictionary)
+                var post = Post(user: user, dictionary: dictionary)
+                post.id = key
                 self.posts.append(post)
             })
             
@@ -136,6 +137,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         print("Message coming from HomeController")
         print(post.caption)
         let commentsController = CommentsController(collectionViewLayout: UICollectionViewFlowLayout())
+        commentsController.post = post
         navigationController?.pushViewController(commentsController, animated: true)
     }
     
