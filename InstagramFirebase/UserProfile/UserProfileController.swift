@@ -33,8 +33,6 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         
         collectionView?.backgroundColor = .white
         
-        
-        
         fetchUser()
         
         collectionView?.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "headerId")
@@ -45,10 +43,6 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         setupLogOutButton()
         
 //        fetchPosts()
-        
-        
-        
-        
     }
     
     var posts = [Post]()
@@ -77,8 +71,6 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
             print("Failed to fetch ordered posts:", err)
         }
     }
-    
-    
     
     fileprivate func setupLogOutButton() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "gear").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleLogout))
@@ -145,8 +137,6 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
             return CGSize(width: view.frame.width, height: height)
             
         }
-        
-        
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -168,7 +158,6 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         
         let uid = userId ?? (Auth.auth().currentUser?.uid ?? "")
         
-//        guard let uid = Auth.auth().currentUser?.uid else { return }
         
         Database.fetchUserWithUID(uid: uid) { (user) in
             self.user = user

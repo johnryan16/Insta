@@ -60,10 +60,20 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         }
     }
     func setupNavigationItems() {
-        navigationItem.titleView = UIImageView(image: #imageLiteral(resourceName: "Instagram_logo_black"))
-        navigationItem.titleView?.contentMode = .scaleAspectFit
+        let imageView = UIImageView(image: #imageLiteral(resourceName: "Instagram_logo_black"))
+        imageView.contentMode = .scaleAspectFit
+        
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 45))
+        imageView.frame = titleView.bounds
+        titleView.addSubview(imageView)
+        
+        navigationItem.titleView = titleView
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "camera3").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleCamera))
+    }
+    
+    @objc func handleSend() {
+        print("Handling send... Really just a placeholder ;) ")
     }
     
     @objc func handleCamera() {

@@ -45,12 +45,9 @@ class UserProfileHeader: UICollectionViewCell {
                 if let isFollowing = snapshot.value as? Int, isFollowing == 1 {
                     
                     self.editProfileFollowButton.setTitle("Unfollow", for: .normal)
-                
                 } else {
                     self.setupFollowStyle()
                 }
-                
-                
             }, withCancel: { (err) in
                     print("Failed to check if following", err)
             })
@@ -93,8 +90,6 @@ class UserProfileHeader: UICollectionViewCell {
                 self.editProfileFollowButton.setTitleColor(.black, for: .normal)
             }
         }
-        
-        
     }
     
     fileprivate func setupFollowStyle() {
@@ -211,11 +206,8 @@ class UserProfileHeader: UICollectionViewCell {
         return button
     }()
     
-    
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         
         addSubview(profileImageView)
         profileImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 12, paddingLeft: 12, paddingBottom: 0, paddingRight: 0, width: 80, height: 80)
