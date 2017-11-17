@@ -8,7 +8,7 @@
 
 import UIKit
 import Firebase
-import LocalAuthentication
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,8 +22,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow()
         window?.rootViewController = MainTabBarController()
+        window?.makeKeyAndVisible()
         
-        
+//        if #available(iOS 10.0, *) {
+//            //This fucker is so slow and lame/Notifications activate
+//            UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+//            
+//            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+//            UNUserNotificationCenter.current().requestAuthorization(options: authOptions, completionHandler: { (_, _) in
+//            })
+//        } else {
+//            print("Not available in this OS")
+//            //todo: Implement window
+//        }
+//        application.registerForRemoteNotifications()
+//        
         return true
     }
 

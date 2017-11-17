@@ -34,13 +34,12 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate, UIViewC
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         transitioningDelegate = self
         
         setupCaptureSession()
         setupHUD()
-        
     }
+    
     let customAnimationPresenter = CustomAnimationPresenter()
     let customAnimationDismisser = CustomAnimationDismisser()
     
@@ -51,7 +50,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate, UIViewC
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return customAnimationDismisser
     }
-    
     
     override var prefersStatusBarHidden: Bool {
         return true
@@ -74,33 +72,20 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate, UIViewC
     }
     
     func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-        
         let imageData = photo.fileDataRepresentation()
-        
         let previewImage = UIImage(data: imageData!)
-        
-        
-        
         let containerView = PreviewPhotoContainerView()
+        
         containerView.previewImageView.image = previewImage
         view.addSubview(containerView)
         containerView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-        
-        
-//        let previewImageView = UIImageView(image: previewImage)
-//        view.addSubview(previewImageView)
-//        previewImageView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-//        
-//        print("Finished processing photo sample buffer.")
     }
-    
     let output = AVCapturePhotoOutput()
     
     fileprivate func setupCaptureSession() {
         let captureSession = AVCaptureSession()
         
         //1.) Setup Inputs
-        
         guard let captureDevice = AVCaptureDevice.default(for: AVMediaType.video) else { return }
         
         do {
@@ -118,7 +103,6 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate, UIViewC
         }
         
         //3.) Setup output preview
-        
         let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         previewLayer.frame = view.frame
         

@@ -34,10 +34,13 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         
         if Auth.auth().currentUser == nil {
             //show if not logged in
+            print("Current user is", Auth.auth().currentUser ?? "")
             DispatchQueue.main.async {
                 let loginController = LoginController()
                 let navController = UINavigationController(rootViewController: loginController)
                 self.present(navController, animated: true, completion: nil)
+            
+            
             }
             return
         }
@@ -50,8 +53,6 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         
         //search
         let searchNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "search_unselected"), selectedImage: #imageLiteral(resourceName: "search_selected"), rootViewController: UserSearchController(collectionViewLayout: UICollectionViewFlowLayout()))
-        
-        
         
         let plusNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "plus_unselected"), selectedImage: #imageLiteral(resourceName: "plus_unselected"))
         

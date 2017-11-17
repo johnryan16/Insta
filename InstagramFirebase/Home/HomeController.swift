@@ -9,15 +9,12 @@
 import UIKit
 import Firebase
 
-
-
 class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout, HomePostCellDelegate {
     
     let cellId = "cellId"
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleUpdateFeed), name: SharePhotoController.updateFeedNotificationName, object: nil)
         collectionView?.backgroundColor = .white
@@ -28,9 +25,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         collectionView?.refreshControl = refreshControl
         
         setupNavigationItems()
-        
         fetchAllPosts()
-        
     }
     
     @objc func handleUpdateFeed() {
@@ -72,9 +67,9 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "camera3").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleCamera))
     }
     
-    @objc func handleSend() {
-        print("Handling send... Really just a placeholder ;) ")
-    }
+//    @objc func handleSend() {
+//        print("Handling send... Really just a placeholder ;) ")
+//    }
     
     @objc func handleCamera() {
         print("Showing Camera")
@@ -94,10 +89,8 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }
     
     fileprivate func fetchPostsWithUser(user: User) {
-        
         let ref = Database.database().reference().child("posts").child(user.uid)
         ref.observeSingleEvent(of: .value, with: { (snapshot) in
-            
             self.collectionView?.refreshControl?.endRefreshing()
             
             guard let dictionaries = snapshot.value as? [String: Any] else { return }
@@ -111,16 +104,13 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
                 post.id = key
                 
                 guard let uid = Auth.auth().currentUser?.uid else { return }
-                
                 Database.database().reference().child("likes").child(key).child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
-                    print(snapshot)
                     
                     if let value = snapshot.value as? Int, value == 1 {
                         post.hasLiked = true
                     } else {
                         post.hasLiked = false
                     }
-                    
                     self.posts.append(post)
                     
                     self.posts.sort(by: { (p1, p2) -> Bool in
@@ -131,12 +121,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
                 }, withCancel: { (err) in
                     print("Failed to fetch like info for post ", err)
                 })
-                
-                
             })
-            
-            
-            
         }) { (err) in
             print("Falied to fetch posts:", err)
         }
@@ -181,7 +166,6 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         print(post.caption)
         
         guard let postId = post.id else { return }
-        
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
         let values = [uid: post.hasLiked == true ? 0 : 1]
@@ -201,8 +185,6 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
             self.collectionView?.reloadItems(at: [indexPath])
         }
     }
-    
-    
 }
 
 

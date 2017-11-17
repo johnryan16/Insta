@@ -11,7 +11,7 @@ import Firebase
 
 extension Database {
     static func fetchUserWithUID(uid: String, completion: @escaping (User) -> ()) {
-        print("Fetching user with uid:", uid)
+        print("Fetching user with uid: \(uid) func[fetchUserWithUID]")
         
         Database.database().reference().child("users").child(uid).observe(.value, with: { (snapshot) in
             guard let userDictionary = snapshot.value as? [String: Any] else { return }
@@ -19,7 +19,6 @@ extension Database {
             
             completion(user)
             
-            //            self.fetchPostsWithUser(user: user)
         }) { (error) in
             print("Failed to fetch user for posts.")
         }
