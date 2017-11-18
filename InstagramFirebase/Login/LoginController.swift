@@ -17,16 +17,14 @@ class LoginController: UIViewController {
 
     let logoContainerView: UIView = {
         let view = UIView()
-
+        
         let logoImageView = UIImageView(image: #imageLiteral(resourceName: "Instagram_logo_white"))
         logoImageView.contentMode = .scaleAspectFill
 
-
         view.addSubview(logoImageView)
         logoImageView.anchor(top: nil, left: nil, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 200, height: 50)
-        logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        logoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-
+        logoImageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor).isActive = true
+        logoImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor).isActive = true
         view.backgroundColor = UIColor.rgb(red: 0, green: 120, blue: 175)
         return view
     }()
@@ -56,8 +54,7 @@ class LoginController: UIViewController {
     }()
 
     @ objc func handleTextInputChange() {
-        let isFormValid = emailTextField.text?.characters.count ?? 0 > 0 &&  passwordTextField.text?.characters.count ?? 0 > 5
-
+        let isFormValid = emailTextField.text?.count ?? 0 > 0 &&  passwordTextField.text?.count ?? 0 > 5
         if isFormValid {
             loginButton.isEnabled = true
             loginButton.backgroundColor = UIColor.rgb(red: 17, green: 154, blue: 237)
@@ -79,11 +76,6 @@ class LoginController: UIViewController {
         button.isEnabled = false
         return button
     }()
-    
-    var keychainPassword: String? = KeychainWrapper.standard.string(forKey: "passwordSaved")
-    var keychainUser: String? = KeychainWrapper.standard.string(forKey: "emailSaved")
-
-    
 
     @objc func handleLogin() {
         guard let email = emailTextField.text else { return }
@@ -125,7 +117,6 @@ class LoginController: UIViewController {
 
         navigationController?.pushViewController(signUpController, animated: true)
     }
-
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -138,20 +129,23 @@ class LoginController: UIViewController {
         super.viewDidLoad()
 
         print("String password is", keychainPassword ?? "")
-
         
         view.addSubview(logoContainerView)
-        logoContainerView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 150)
+        logoContainerView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 150)
 
         navigationController?.isNavigationBarHidden = true
         view.backgroundColor = .white
 
         view.addSubview(dontHaveAccountButton)
-        dontHaveAccountButton.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
+        dontHaveAccountButton.anchor(top: nil, left: view.safeAreaLayoutGuide.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
 
         setupInputFields()
 
         }
+    
+    var keychainPassword: String? = KeychainWrapper.standard.string(forKey: "passwordSaved")
+    
+    var keychainUser: String? = KeychainWrapper.standard.string(forKey: "emailSaved")
     
     fileprivate func callTouchId() {
         if #available(iOS 8.0, *) {
@@ -161,6 +155,8 @@ class LoginController: UIViewController {
                         DispatchQueue.main.async {
                             self.passwordTextField.text = self.keychainPassword
                             self.emailTextField.text = self.keychainUser
+                            print("User to be submitted is", self.emailTextField)
+                            print("Password to be sumbitted is\(self.passwordTextField)")
                             self.handleLogin()
                             print(self.passwordTextField)
                         }
@@ -183,8 +179,10 @@ class LoginController: UIViewController {
 
             view.addSubview(stackView)
             stackView.anchor(top: logoContainerView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 40, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 140)
+            
+            if self.keychainPassword != nil {
             callTouchId()
-
+            }
     }
 }
 

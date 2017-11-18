@@ -24,22 +24,22 @@ extension UIView {
         
         translatesAutoresizingMaskIntoConstraints = false
         if let top = top {
-            self.safeAreaLayoutGuide.topAnchor.constraint(equalTo: top, constant: paddingTop).isActive = true
+            self.topAnchor.constraint(equalTo: top, constant: paddingTop).isActive = true
         }
         if let left = left {
             self.leftAnchor.constraint(equalTo: left, constant: paddingLeft).isActive = true
         }
         if let bottom = bottom {
-            safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: bottom, constant: -paddingBottom).isActive = true
+            bottomAnchor.constraint(equalTo: bottom, constant: -paddingBottom).isActive = true
         }
         if let right = right {
-            safeAreaLayoutGuide.rightAnchor.constraint(equalTo: right, constant: -paddingRight).isActive = true
+            rightAnchor.constraint(equalTo: right, constant: -paddingRight).isActive = true
         }
         if width != 0 {
-            safeAreaLayoutGuide.widthAnchor.constraint(equalToConstant: width).isActive = true
+            widthAnchor.constraint(equalToConstant: width).isActive = true
         }
         if height != 0 {
-            safeAreaLayoutGuide.heightAnchor.constraint(equalToConstant: height).isActive = true
+            heightAnchor.constraint(equalToConstant: height).isActive = true
         }
     }
 }

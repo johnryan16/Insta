@@ -135,6 +135,11 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     
     fileprivate func setupLogOutButton() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "gear").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleLogout))
+        
+    }
+    
+    fileprivate func getSettings() {
+        
     }
     
     @objc func handleLogout() {
@@ -154,6 +159,12 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         }))
         
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        let deviceSettings = DeviceSettings()
+        let navController = UINavigationController(rootViewController: deviceSettings)
+        alertController.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (_) in
+            self.present(navController, animated: true, completion: nil)
+        }))
         
         present(alertController, animated: true, completion: nil)
     }

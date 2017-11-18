@@ -31,6 +31,7 @@
 		1BA17D981F58849200837AF1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1BA17D961F58849200837AF1 /* LaunchScreen.storyboard */; };
 		1BA17DA11F5890B600837AF1 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA17DA01F5890B600837AF1 /* Extensions.swift */; };
 		1BA17DA31F589E2D00837AF1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1BA17DA21F589E2D00837AF1 /* GoogleService-Info.plist */; };
+		1BBFD12B1FBF4B36002DD26B /* DeviceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBFD12A1FBF4B36002DD26B /* DeviceSettings.swift */; };
 		1BE9FBE61F58CE49000F3B65 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE9FBE51F58CE49000F3B65 /* MainTabBarController.swift */; };
 		1BE9FBE81F58CFA8000F3B65 /* UserProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE9FBE71F58CFA8000F3B65 /* UserProfileController.swift */; };
 		1BE9FBEB1F58DE11000F3B65 /* UserProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE9FBEA1F58DE11000F3B65 /* UserProfileHeader.swift */; };
@@ -71,6 +72,7 @@
 		1BA17D991F58849200837AF1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BA17DA01F5890B600837AF1 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		1BA17DA21F589E2D00837AF1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1BBFD12A1FBF4B36002DD26B /* DeviceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSettings.swift; sourceTree = "<group>"; };
 		1BE9FBE51F58CE49000F3B65 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		1BE9FBE71F58CFA8000F3B65 /* UserProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileController.swift; sourceTree = "<group>"; };
 		1BE9FBEA1F58DE11000F3B65 /* UserProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileHeader.swift; sourceTree = "<group>"; };
@@ -193,6 +195,7 @@
 				1B2140041F63A05E00453E08 /* Home */,
 				1B65701F1F5E3EA900EC1ECD /* Models */,
 				1B1C4A461F5CC08F00B60604 /* AddPhoto */,
+				1BBFD1291FBF4B16002DD26B /* Device Settings */,
 				1BE9FBEC1F592EE8000F3B65 /* Login */,
 				1BE9FBE91F58DDFD000F3B65 /* UserProfile */,
 				1BA17D9F1F58909C00837AF1 /* Utils */,
@@ -218,6 +221,14 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+		1BBFD1291FBF4B16002DD26B /* Device Settings */ = {
+			isa = PBXGroup;
+			children = (
+				1BBFD12A1FBF4B36002DD26B /* DeviceSettings.swift */,
+			);
+			path = "Device Settings";
+			sourceTree = "<group>";
+		};
 		1BE9FBE91F58DDFD000F3B65 /* UserProfile */ = {
 			isa = PBXGroup;
 			children = (
@@ -231,8 +242,8 @@
 		1BE9FBEC1F592EE8000F3B65 /* Login */ = {
 			isa = PBXGroup;
 			children = (
-				1BE9FBED1F592EF6000F3B65 /* LoginController.swift */,
 				1BA17D8F1F58849200837AF1 /* SignUpController.swift */,
+				1BE9FBED1F592EF6000F3B65 /* LoginController.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -393,6 +404,7 @@
 				1B5623CE1F65CF4400761562 /* User.swift in Sources */,
 				1BEA60AE1F71D488001A6B25 /* CommentCell.swift in Sources */,
 				1BE9FBE61F58CE49000F3B65 /* MainTabBarController.swift in Sources */,
+				1BBFD12B1FBF4B36002DD26B /* DeviceSettings.swift in Sources */,
 				1BE9FBEB1F58DE11000F3B65 /* UserProfileHeader.swift in Sources */,
 				1BEA60AA1F71AF22001A6B25 /* CustomAnimationDismisser.swift in Sources */,
 				1B640FB71FBE269F005B2751 /* KeychainWrapper.swift in Sources */,

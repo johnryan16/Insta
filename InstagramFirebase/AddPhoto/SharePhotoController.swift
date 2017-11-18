@@ -55,7 +55,7 @@ class SharePhotoController: UIViewController {
     }
     
     @objc func handleShare() {
-        guard let caption = textView.text, caption.characters.count > 0 else { return }
+        guard let caption = textView.text, caption.count > 0 else { return }
         guard let image = selectedImage else { return }
         guard let uploadData = UIImageJPEGRepresentation(image, 0.5) else { return }
         
