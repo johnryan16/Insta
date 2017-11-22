@@ -48,64 +48,43 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     var isFinishedPaging = false
     var posts = [Post]()
     
-    
     fileprivate func paginatePosts() {
         print("start paging")
-        
         guard let uid = self.user?.uid else { return }
         let ref = Database.database().reference().child("posts").child(uid)
-        
-//        let value = "oijgoijdsovdos39"
-//        let query = ref.queryOrderedByKey().queryStarting(atValue: value).queryLimited(toFirst: 6)
-        
-//        var query = ref.queryOrderedByKey()
-        
         var query = ref.queryOrdered(byChild: "creationDate")
         
         if posts.count > 0 {
             let value = posts.last?.creationDate.timeIntervalSince1970
             query = query.queryEnding(atValue: value)
         }
-        
         query.queryLimited(toLast: 4).observeSingleEvent(of: .value, with: { (snapshot) in
             print(snapshot.value ?? "")
-            
             guard var allObjects = snapshot.children.allObjects as? [DataSnapshot] else { return }
-            
             allObjects.reverse()
             
             if allObjects.count < 4 {
                 self.isFinishedPaging = true
             }
-            
             if self.posts.count > 0 {
             allObjects.removeFirst()
             }
-            
             guard let user = self.user else { return }
-            
             allObjects.forEach({ (snapshot) in
-                
                 guard let dictionary = snapshot.value as? [String: Any] else { return }
                 var post = Post(user: user, dictionary: dictionary)
                 
                 post.id = snapshot.key
-                
                 self.posts.append(post)
-                
                 print(snapshot.key)
             })
-            
             self.posts.forEach({ (post) in
                 print(post.id ?? "")
             })
-            
             self.collectionView?.reloadData()
-            
         }) { (err) in
             print("Failed to paginate", err)
         }
-        
     }
     
     fileprivate func fetchOrderedPosts() {
@@ -135,11 +114,6 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     
     fileprivate func setupLogOutButton() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "gear").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleLogout))
-        
-    }
-    
-    fileprivate func getSettings() {
-        
     }
     
     @objc func handleLogout() {
@@ -150,22 +124,19 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
                 try Auth.auth().signOut()
                 let loginController = LoginController()
                 let navController = UINavigationController(rootViewController: loginController)
-                
+                KeychainWrapper.standard.removeObject(forKey: "passwordSaved")
                 self.present(navController, animated: true, completion: nil)
             } catch let signOutErr {
                 print("Failed to sign out for some reason:", signOutErr)
             }
-            
         }))
-        
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
         let deviceSettings = DeviceSettings()
         let navController = UINavigationController(rootViewController: deviceSettings)
         alertController.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (_) in
-            self.present(navController, animated: true, completion: nil)
+            self.navigationController?.pushViewController(navController, animated: true)
         }))
-        
         present(alertController, animated: true, completion: nil)
     }
     

@@ -73,6 +73,9 @@ extension Date {
         } else if secondsAgo < month {
             quotient = secondsAgo / week
             unit = "week"
+        } else if secondsAgo < year {
+            quotient = secondsAgo / month
+            unit = "month"
         } else {
             quotient = secondsAgo / year
             unit = "year"

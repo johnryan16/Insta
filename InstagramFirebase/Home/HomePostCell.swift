@@ -20,7 +20,7 @@ class HomePostCell: UICollectionViewCell {
     
     var post: Post? {
         didSet {
-            print(post?.imageUrl ?? "")
+//            print(post?.imageUrl ?? "")
             
             guard let postImageUrl = post?.imageUrl else { return }
             
@@ -28,7 +28,7 @@ class HomePostCell: UICollectionViewCell {
             
             photoImageView.loadImage(urlString: postImageUrl)
             
-            usernameLabel.text = "Test Username"
+//            usernameLabel.text = "Test Username"
             
             //wouldnt it be nice?
             usernameLabel.text = post?.user.username
@@ -39,7 +39,6 @@ class HomePostCell: UICollectionViewCell {
 //            captionLabel.text = post?.caption
             
             setupAttributedCaption()
-            
         }
     }
     
@@ -128,10 +127,6 @@ class HomePostCell: UICollectionViewCell {
     
     let captionLabel: UILabel = {
         let label = UILabel()
-        
-        
-        
-        
         label.numberOfLines = 0
         return label
     }()
@@ -139,13 +134,10 @@ class HomePostCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        
-        
         addSubview(userProfileImageView)
         addSubview(usernameLabel)
         addSubview(photoImageView)
         addSubview(optionsButton)
-        
         
         userProfileImageView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 40, height: 40)
         userProfileImageView.layer.cornerRadius = 40 / 2
@@ -162,7 +154,6 @@ class HomePostCell: UICollectionViewCell {
         addSubview(captionLabel)
         captionLabel.anchor(top: likeButton.bottomAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
     }
-    
     fileprivate func setupActionButtons() {
         let stackView = UIStackView(arrangedSubviews: [likeButton, commentButton, sendMessageButton])
         
@@ -174,7 +165,6 @@ class HomePostCell: UICollectionViewCell {
         addSubview(bookmarkButton)
         bookmarkButton.anchor(top: photoImageView.bottomAnchor, left: nil, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 40, height: 50)
     }
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

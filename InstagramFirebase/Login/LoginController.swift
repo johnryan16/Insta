@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import LocalAuthentication
+import NotificationCenter
 
 
 //ToDo: Implement no network connection logic
@@ -52,9 +53,17 @@ class LoginController: UIViewController {
         tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
         return tf
     }()
+    
+    func isValidEmail(email: String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
+        let emailTest = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
+        let result = emailTest.evaluate(with: email)
+        return result
+    }
 
-    @ objc func handleTextInputChange() {
-        let isFormValid = emailTextField.text?.count ?? 0 > 0 &&  passwordTextField.text?.count ?? 0 > 5
+    @objc func handleTextInputChange() {
+        let validEmail = isValidEmail(email: emailTextField.text ?? "")
+        let isFormValid = emailTextField.text?.count ?? 0 > 0 && passwordTextField.text?.count ?? 0 > 5 && validEmail == true
         if isFormValid {
             loginButton.isEnabled = true
             loginButton.backgroundColor = UIColor.rgb(red: 17, green: 154, blue: 237)
@@ -80,34 +89,81 @@ class LoginController: UIViewController {
     @objc func handleLogin() {
         guard let email = emailTextField.text else { return }
         guard let password = passwordTextField.text else { return }
-
+        
         Auth.auth().signIn(withEmail: email, password: password) { (user, err) in
             if let err = err {
                 print("Failed to sign in with email:", err)
+                self.handleError()
                 return
             }
-            print("Successfully logged back in with user:", user?.uid ?? "")
-
+//            if Auth.auth().currentUser?.isEmailVerified == true {
+//            print("Successfully logged back in with user:", user?.uid ?? "")
+//
             guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { return }
-            
+//
             if self.keychainPassword == nil {
                 KeychainWrapper.standard.set(email, forKey: "emailSaved")
                 KeychainWrapper.standard.set(password, forKey: "passwordSaved")
             }
             mainTabBarController.setupViewControllers()
             self.dismiss(animated: true, completion: nil)
-        }
+            }
+//            else {
+//                print("Email NOT Verified")
+//                let alert = UIAlertController(title: "Email Not Verified", message: "Please verify your email address.", preferredStyle: .alert)
+//                alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (_) in
+//                    do{
+//                        try Auth.auth().signOut()
+//                        KeychainWrapper.standard.removeObject(forKey: "passwordSaved")
+//                    } catch let signOutErr {
+//                        print("Failed to sign out for some reason:", signOutErr)
+//                    }
+//                    self.passwordTextField.text?.removeAll()
+//                }))
+//                self.present(alert, animated: true, completion: nil)
+//            }
+//        }
     }
-
+    
+    fileprivate func handleError() {
+        guard let username = emailTextField.text else { return }
+        let alert = UIAlertController(title: "Incorrect password for \(username)" , message: "The password you entered is incorrect. Please try again.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Try Again", style: .cancel, handler: { (_) in
+            self.passwordTextField.text?.removeAll()
+        }))
+        let controller = ForgotPassword()
+        alert.addAction(UIAlertAction(title: "Forgot Password", style: .default, handler: { (_) in
+            self.navigationController?.pushViewController(controller, animated: true)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
+    let forgotPasswordButton: UILabel = {
+        let questionText = UILabel()
+        questionText.text = "Forgot your password?"
+        questionText.font = UIFont.systemFont(ofSize: 14)
+        questionText.textColor = .darkGray
+        return questionText
+    }()
+    let resetPasswordButton: UIButton = {
+       let button = UIButton(type: .system)
+        let attributedTitle = NSMutableAttributedString(string: "Reset Password", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.rgb(red: 17, green: 154, blue: 237)])
+        button.setAttributedTitle(attributedTitle, for: .normal)
+        button.addTarget(self, action: #selector(handleForgotPassword), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc func handleForgotPassword() {
+        let forgotPasswordController = ForgotPassword()
+        navigationController?.pushViewController(forgotPasswordController, animated: true)
+        
+    }
+    
     let dontHaveAccountButton: UIButton = {
        let button = UIButton(type: .system)
         let attributedTitle = NSMutableAttributedString(string: "Don't have an account?  ", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray])
 
         attributedTitle.append(NSAttributedString(string: "Sign Up", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.rgb(red: 17, green: 154, blue: 237)]))
-
         button.setAttributedTitle(attributedTitle, for: .normal)
-
-        button.setTitle("Don't have an account?  Sign Up.", for: .normal)
         button.addTarget(self, action: #selector(handleShowSignUp), for: .touchUpInside)
         return button
     }()
@@ -122,32 +178,39 @@ class LoginController: UIViewController {
     }
 
     let myContext = LAContext()
-    let myLocalizedReasonString = "Just do it."
+    let myLocalizedReasonString = "Please Sign On."
     var authError: NSError?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        print("String password is", keychainPassword ?? "")
         
         view.addSubview(logoContainerView)
-        logoContainerView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 150)
+        logoContainerView.anchor(top: view.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 150)
 
         navigationController?.isNavigationBarHidden = true
         view.backgroundColor = .white
 
         view.addSubview(dontHaveAccountButton)
         dontHaveAccountButton.anchor(top: nil, left: view.safeAreaLayoutGuide.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
-
+        
         setupInputFields()
-
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleViewWillEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         }
+    
+    @objc func handleViewWillEnterForeground() {
+        let presentTouchID = KeychainWrapper.standard.bool(forKey: "savedToggleState")
+        if self.keychainPassword != nil && presentTouchID == true {
+        callTouchId()
+        print("Called Touch ID")
+        }
+    }
     
     var keychainPassword: String? = KeychainWrapper.standard.string(forKey: "passwordSaved")
     
     var keychainUser: String? = KeychainWrapper.standard.string(forKey: "emailSaved")
     
-    fileprivate func callTouchId() {
+    func callTouchId() {
         if #available(iOS 8.0, *) {
             if self.myContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &self.authError) {
                 myContext.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: myLocalizedReasonString, reply: { (success, err) in
@@ -155,13 +218,10 @@ class LoginController: UIViewController {
                         DispatchQueue.main.async {
                             self.passwordTextField.text = self.keychainPassword
                             self.emailTextField.text = self.keychainUser
-                            print("User to be submitted is", self.emailTextField)
-                            print("Password to be sumbitted is\(self.passwordTextField)")
                             self.handleLogin()
-                            print(self.passwordTextField)
                         }
                     } else {
-                        print("Auth error", err ?? "")
+                        print("There is an Auth error:", err ?? "")
                     }
                 })
             } else {
@@ -169,21 +229,24 @@ class LoginController: UIViewController {
             }
         }
     }
-
-        fileprivate func setupInputFields() {
-            let stackView = UIStackView(arrangedSubviews: [emailTextField, passwordTextField, loginButton])
-
-            stackView.axis = .vertical
-            stackView.spacing = 10
-            stackView.distribution = .fillEqually
-
-            view.addSubview(stackView)
-            stackView.anchor(top: logoContainerView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 40, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 140)
-            
-            if self.keychainPassword != nil {
-            callTouchId()
-            }
+    
+    fileprivate func setupInputFields() {
+        let stackView = UIStackView(arrangedSubviews: [emailTextField, passwordTextField, loginButton])
+        stackView.axis = .vertical
+        stackView.spacing = 10
+        stackView.distribution = .fillEqually
+        
+        view.addSubview(stackView)
+        stackView.anchor(top: logoContainerView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 40, paddingLeft: 40, paddingBottom: 0, paddingRight: 40, width: 0, height: 140)
+        
+        view.addSubview(forgotPasswordButton)
+        forgotPasswordButton.anchor(top: stackView.bottomAnchor, left: stackView.leftAnchor, bottom: nil, right: nil, paddingTop: 15, paddingLeft: 15, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        
+        view.addSubview(resetPasswordButton)
+        resetPasswordButton.anchor(top: nil, left: forgotPasswordButton.rightAnchor, bottom: forgotPasswordButton.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 4, paddingBottom: -5, paddingRight: 0, width: 0, height: 0)
     }
+    
+    
 }
 
 

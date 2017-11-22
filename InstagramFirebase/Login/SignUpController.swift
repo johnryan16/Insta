@@ -27,18 +27,11 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        
-        
         if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
-            
             plusPhotoButton.setImage(editedImage.withRenderingMode(.alwaysOriginal), for: .normal)
-            
-            
         } else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
-            
             plusPhotoButton.setImage(originalImage.withRenderingMode(.alwaysOriginal), for: .normal)
         }
-        
         plusPhotoButton.layer.cornerRadius = plusPhotoButton.frame.width/2
         plusPhotoButton.layer.masksToBounds = true
         plusPhotoButton.layer.borderColor = UIColor.black.cgColor
@@ -82,8 +75,6 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
         tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
         return tf
     }()
-    
-   
     
     let passwordTextField: UITextField = {
         let tf = UITextField()
@@ -144,17 +135,21 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
                 let values = [uid: dictionaryValues]
                 
                 Database.database().reference().child("users").updateChildValues(values, withCompletionBlock: { (err, ref) in
-                    
                     if let err = err {
                         print("Failed to save user infor to F-DB:", err)
                         return
                     }
                     print("Successfully Saved user to DB")
-                    
                     guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { return }
                     
-                    mainTabBarController.setupViewControllers()
+//                    Auth.auth().currentUser?.sendEmailVerification(completion: { (err) in
+//                        if let err = err {
+//                            print("Failed to Send Verification Email", err)
+//                        }
+//                        print("Successfully send verification email")
+//                    })
                     
+                    mainTabBarController.setupViewControllers()
                     self.dismiss(animated: true, completion: nil)
                 })
             })
@@ -180,10 +175,11 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(alreadyHaveAccountButton)
-        alreadyHaveAccountButton.anchor(top: nil, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
-        
         view.backgroundColor = .white
+        
+        view.addSubview(alreadyHaveAccountButton)
+        alreadyHaveAccountButton.anchor(top: nil, left: view.safeAreaLayoutGuide.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 50)
+        
         
         view.addSubview(plusPhotoButton)
         
@@ -191,6 +187,7 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
         plusPhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
         setupInputFields()
+
     }
 
     fileprivate func setupInputFields() {

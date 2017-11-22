@@ -62,6 +62,7 @@ class DeviceSettings: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(handleBack))
         view.addSubview(touchText)
         touchText.anchor(top: view.safeAreaLayoutGuide.centerYAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 35, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
@@ -69,6 +70,33 @@ class DeviceSettings: UIViewController {
         
         setDefaultSwitchState()
         touchSwitch.anchor(top: view.safeAreaLayoutGuide.centerYAnchor, left: touchText.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 5, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
-       
     }
+    
+    @objc func handleBack() {
+        handleKeychainUpdates()
+        dismiss(animated: true, completion: nil)
+    }
+    
+    fileprivate func handleKeychainUpdates() {
+        if currentToggleState == false {
+            KeychainWrapper.standard.removeObject(forKey: "passwordSaved")
+            print("Removed Password from Keychain")
+        }
+        return
+    }
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

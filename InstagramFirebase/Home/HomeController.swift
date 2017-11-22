@@ -97,8 +97,8 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
             
             dictionaries.forEach({ (key, value) in
                 guard let dictionary = value as? [String: Any] else { return }
-                let imageUrl = dictionary["imageUrl"] as? String
-                print("Image URL: \(imageUrl ?? "")")
+//                let imageUrl = dictionary["imageUrl"] as? String
+//                print("Image URL: \(imageUrl ?? "")")
                 
                 var post = Post(user: user, dictionary: dictionary)
                 post.id = key

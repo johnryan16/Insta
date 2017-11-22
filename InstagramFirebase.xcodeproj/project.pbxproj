@@ -23,6 +23,7 @@
 		1B6570211F5E3EB900EC1ECD /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6570201F5E3EB900EC1ECD /* Post.swift */; };
 		1B6570231F5E416900EC1ECD /* UserProfilePhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6570221F5E416900EC1ECD /* UserProfilePhotoCell.swift */; };
 		1B6570251F5E4BC500EC1ECD /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6570241F5E4BC400EC1ECD /* CustomImageView.swift */; };
+		1B8C8C2D1FC2045800B93150 /* ForgotPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B8C8C2C1FC2045800B93150 /* ForgotPassword.swift */; };
 		1B95CB461F6A1E0000F2CFE4 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B95CB451F6A1E0000F2CFE4 /* CameraController.swift */; };
 		1BA17D8E1F58849200837AF1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA17D8D1F58849200837AF1 /* AppDelegate.swift */; };
 		1BA17D901F58849200837AF1 /* SignUpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA17D8F1F58849200837AF1 /* SignUpController.swift */; };
@@ -62,6 +63,7 @@
 		1B6570201F5E3EB900EC1ECD /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		1B6570221F5E416900EC1ECD /* UserProfilePhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfilePhotoCell.swift; sourceTree = "<group>"; };
 		1B6570241F5E4BC400EC1ECD /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
+		1B8C8C2C1FC2045800B93150 /* ForgotPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPassword.swift; sourceTree = "<group>"; };
 		1B95CB451F6A1E0000F2CFE4 /* CameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		1BA17D8A1F58849200837AF1 /* InstagramFirebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InstagramFirebase.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BA17D8D1F58849200837AF1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -244,6 +246,7 @@
 			children = (
 				1BA17D8F1F58849200837AF1 /* SignUpController.swift */,
 				1BE9FBED1F592EF6000F3B65 /* LoginController.swift */,
+				1B8C8C2C1FC2045800B93150 /* ForgotPassword.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -408,6 +411,7 @@
 				1BE9FBEB1F58DE11000F3B65 /* UserProfileHeader.swift in Sources */,
 				1BEA60AA1F71AF22001A6B25 /* CustomAnimationDismisser.swift in Sources */,
 				1B640FB71FBE269F005B2751 /* KeychainWrapper.swift in Sources */,
+				1B8C8C2D1FC2045800B93150 /* ForgotPassword.swift in Sources */,
 				1BE9FBE81F58CFA8000F3B65 /* UserProfileController.swift in Sources */,
 				1BA17D8E1F58849200837AF1 /* AppDelegate.swift in Sources */,
 				1B5100561F71596800075D87 /* PreviewPhotoContainerView.swift in Sources */,
