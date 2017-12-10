@@ -11,7 +11,7 @@ import Firebase
 import UserNotifications
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
 
     var window: UIWindow?
 
@@ -19,24 +19,87 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         FirebaseApp.configure()
-        
         window = UIWindow()
         window?.rootViewController = MainTabBarController()
         window?.makeKeyAndVisible()
-        
-//        if #available(iOS 10.0, *) {
-//            UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
-//            
-//            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-//            UNUserNotificationCenter.current().requestAuthorization(options: authOptions, completionHandler: { (_, _) in
-//            })
-//        } else {
-//            print("Not available in this OS")
-//            //todo: Implement window
-//        }
-//        application.registerForRemoteNotifications()
-        
+        attemptRegisterForNotification(application: application)
         return true
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        print("Registered for notifications:", deviceToken)
+        handleFcmTokenStatus()
+    }
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        print("Registered with FCM with token:", fcmToken)
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler(.alert)
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        
+        let userInfo = response.notification.request.content.userInfo
+        
+        if let followerId = userInfo["followerId"] as? String {
+            print(followerId)
+            
+            //Push user profile controller for folloerID HERE
+            
+            let userProfileController = UserProfileController(collectionViewLayout: UICollectionViewFlowLayout())
+            userProfileController.userId = followerId
+            
+            //Access main UI from Appdelegate
+            if let mainTabBarController = window?.rootViewController as? MainTabBarController {
+                
+                mainTabBarController.selectedIndex = 0
+                mainTabBarController.presentedViewController?.dismiss(animated: true, completion: nil)
+                
+                if let homeNavigationController = mainTabBarController.viewControllers?.first as? UINavigationController {
+                    homeNavigationController.pushViewController(userProfileController, animated: true)
+                }
+            }
+        }
+    }
+    
+    private func attemptRegisterForNotification(application: UIApplication) {
+        Messaging.messaging().delegate = self
+        UNUserNotificationCenter.current().delegate = self
+        
+        let options: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(options: options) { (granted, err) in
+            if let err = err {
+                print("Failed to request auth", err)
+                return
+            }
+            if granted {
+                print("Auth granted.")
+            } else {
+                print("Auth denied.")
+            }
+        }
+        application.registerForRemoteNotifications()
+    }
+    
+    fileprivate func handleFcmTokenStatus() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let checkLocation = Database.database().reference().child("users").child(uid).child("fcmToken")
+        checkLocation.observeSingleEvent(of: .value) { (snapshot) in
+            let value = snapshot.value as? String
+            if value == nil {
+                guard let fcmToken = Messaging.messaging().fcmToken else { return }
+                let values = ["fcmToken": fcmToken]
+                Database.database().reference().child("users").child(uid).updateChildValues(values, withCompletionBlock: { (err, ref) in
+                    if let err = err {
+                        print("Failed to save user info to F-DB:", err)
+                        return
+                    }
+                    print("Successfully Saved user to DB")
+                })
+            }
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

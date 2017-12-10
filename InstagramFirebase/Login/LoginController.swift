@@ -35,6 +35,7 @@ class LoginController: UIViewController {
         tf.keyboardType = UIKeyboardType.emailAddress
         tf.textContentType = UITextContentType.emailAddress
         tf.autocapitalizationType = UITextAutocapitalizationType.none
+        tf.autocorrectionType = UITextAutocorrectionType.no
         tf.placeholder = "Email"
         tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
         tf.borderStyle = .roundedRect
@@ -105,6 +106,8 @@ class LoginController: UIViewController {
                 KeychainWrapper.standard.set(email, forKey: "emailSaved")
                 KeychainWrapper.standard.set(password, forKey: "passwordSaved")
             }
+            
+            
             mainTabBarController.setupViewControllers()
             self.dismiss(animated: true, completion: nil)
             }
@@ -125,6 +128,13 @@ class LoginController: UIViewController {
 //        }
     }
     
+    fileprivate func handleFcmTokenStatus() {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let location = Database.database().reference().child("users").child(uid).child("fcmToken")
+        print("Stored DB Token is", location)
+        
+    }
+    
     fileprivate func handleError() {
         guard let username = emailTextField.text else { return }
         let alert = UIAlertController(title: "Incorrect password for \(username)" , message: "The password you entered is incorrect. Please try again.", preferredStyle: .alert)
@@ -137,6 +147,7 @@ class LoginController: UIViewController {
         }))
         self.present(alert, animated: true, completion: nil)
     }
+    
     let forgotPasswordButton: UILabel = {
         let questionText = UILabel()
         questionText.text = "Forgot your password?"
@@ -198,7 +209,7 @@ class LoginController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(handleViewWillEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         }
     
-    @objc func handleViewWillEnterForeground() {
+    @objc func handleViewWillEnterForeground(notification: NSNotification) {
         let presentTouchID = KeychainWrapper.standard.bool(forKey: "savedToggleState")
         if self.keychainPassword != nil && presentTouchID == true {
         callTouchId()

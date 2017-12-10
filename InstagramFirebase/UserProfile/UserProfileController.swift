@@ -135,7 +135,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         let deviceSettings = DeviceSettings()
         let navController = UINavigationController(rootViewController: deviceSettings)
         alertController.addAction(UIAlertAction(title: "Settings", style: .default, handler: { (_) in
-            self.navigationController?.pushViewController(navController, animated: true)
+            self.present(navController, animated: true, completion: nil)
         }))
         present(alertController, animated: true, completion: nil)
     }

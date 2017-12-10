@@ -110,7 +110,6 @@ class HomePostCell: UICollectionViewCell {
         guard let post = post else { return }
         
         delegate?.didTapComment(post: post)
-        
     }
     
     let sendMessageButton: UIButton = {
@@ -154,6 +153,7 @@ class HomePostCell: UICollectionViewCell {
         addSubview(captionLabel)
         captionLabel.anchor(top: likeButton.bottomAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
     }
+    
     fileprivate func setupActionButtons() {
         let stackView = UIStackView(arrangedSubviews: [likeButton, commentButton, sendMessageButton])
         

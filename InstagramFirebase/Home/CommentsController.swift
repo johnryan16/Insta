@@ -58,10 +58,6 @@ class CommentsController: UICollectionViewController, UICollectionViewDelegateFl
                 self.collectionView?.reloadData()
                 
             })
-            
-            
-            
-            
         }) { (err) in
             print("Failed to observe comments")
         }
@@ -155,8 +151,6 @@ class CommentsController: UICollectionViewController, UICollectionViewDelegateFl
             }
             print("Successfully inserted comment.")
         }
-        
-        
     }
     
     override var inputAccessoryView: UIView? {

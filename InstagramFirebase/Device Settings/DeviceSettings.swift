@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Firebase
 
 class DeviceSettings: UIViewController {
     
@@ -21,18 +22,66 @@ class DeviceSettings: UIViewController {
     
     @objc func switchDidChange() {
         if currentToggleState == false {
-            currentToggleState = true
+            handleRequestPasswordToEnableAlert()
             print("Toggle State is now", currentToggleState ?? "")
-            KeychainWrapper.standard.set(true, forKey: "savedToggleState")
-            
-        } else if currentToggleState == true {
+        }
+        else if currentToggleState == true {
             currentToggleState = false
             print("Toggle State is now", currentToggleState ?? "")
             KeychainWrapper.standard.set(false, forKey: "savedToggleState")
         }
     }
     
-    func setDefaultSwitchState() {
+    func handleRequestPasswordToEnableAlert() {
+        let alertController = UIAlertController(title: "Enter Password", message: "Enter your password to enable TouchID", preferredStyle: .alert)
+        alertController.addTextField { (password) in
+            password.isSecureTextEntry = true
+            password.placeholder = "Password"
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (result) in
+            self.touchSwitch.isOn = false
+            print("Canceled at first request popup. Set toggle to off/false.")
+        }
+        let okAction = UIAlertAction(title: "OK", style: .default) { (result) in
+            guard let passwordText = alertController.textFields?.first?.text else { return }
+            guard let currentUserEmail = Auth.auth().currentUser?.email else { return }
+            Auth.auth().currentUser?.reauthenticate(with: EmailAuthProvider.credential(withEmail: currentUserEmail, password: passwordText), completion: { (err) in
+                if let err = err {
+                    print("There's a reauth error", err)
+                    self.touchSwitch.isOn = false
+                    self.currentToggleState = false
+                    self.handleReauthErrorWindow()
+                    print("Toggle State is now", self.currentToggleState ?? "")
+                    KeychainWrapper.standard.set(false, forKey: "savedToggleState")
+                    return
+                }
+                self.currentToggleState = true
+                print("Toggle State is now", self.currentToggleState ?? "")
+                KeychainWrapper.standard.set(true, forKey: "savedToggleState")
+            })
+        }
+        alertController.addAction(cancelAction)
+        alertController.addAction(okAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    func handleReauthErrorWindow() {
+        let errorAlert = UIAlertController(title: "Incorrect Login Credentials", message: "Your email and/or password are incorrect.", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (result) in
+            print("Canceling at Error Popup.")
+        }
+        let tryAgainAction = UIAlertAction(title: "Try Again", style: .default, handler: { (result) in
+            self.handleRequestPasswordToEnableAlert()
+        })
+        errorAlert.addAction(tryAgainAction)
+        errorAlert.addAction(cancelAction)
+        
+        self.present(errorAlert, animated: true, completion: nil)
+    }
+    
+    
+    func loadSwitchState() {
         let savedToggleState = KeychainWrapper.standard.bool(forKey: "savedToggleState")
         print("Loaded toggleState of", savedToggleState ?? "")
         let defaultValue = false
@@ -68,7 +117,7 @@ class DeviceSettings: UIViewController {
         
         view.addSubview(touchSwitch)
         
-        setDefaultSwitchState()
+        loadSwitchState()
         touchSwitch.anchor(top: view.safeAreaLayoutGuide.centerYAnchor, left: touchText.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 5, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
     }
     
@@ -82,9 +131,7 @@ class DeviceSettings: UIViewController {
             KeychainWrapper.standard.removeObject(forKey: "passwordSaved")
             print("Removed Password from Keychain")
         }
-        return
     }
-    
 }
 
 
