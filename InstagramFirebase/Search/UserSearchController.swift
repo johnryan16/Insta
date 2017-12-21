@@ -53,6 +53,8 @@ class UserSearchController: UICollectionViewController, UICollectionViewDelegate
         collectionView?.alwaysBounceVertical = true
         collectionView?.keyboardDismissMode = .onDrag
         
+        
+        
         fetchUsers()
     }
     

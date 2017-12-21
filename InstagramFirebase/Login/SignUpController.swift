@@ -188,8 +188,26 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
         plusPhotoButton.anchor(top: view.topAnchor, left: nil, bottom: nil, right: nil, paddingTop: 40, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 140, height: 140)
         plusPhotoButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(endEditing)))
+        
         setupInputFields()
 
+    }
+    
+    @objc func endEditing(gesture: UITapGestureRecognizer) {
+        if emailTextField.isFirstResponder {
+            emailTextField.endEditing(true)
+        }
+        if passwordTextField.isFirstResponder {
+            passwordTextField.endEditing(true)
+        }
+        if usernameTextField.isFirstResponder {
+            usernameTextField.endEditing(true)
+        }
+        else {
+            return
+            //ToDo: Something else
+        }
     }
 
     fileprivate func setupInputFields() {

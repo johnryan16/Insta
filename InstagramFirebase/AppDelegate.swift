@@ -15,16 +15,61 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        
         FirebaseApp.configure()
+        
+        let userDefaults = UserDefaults.standard
+        
+        if userDefaults.bool(forKey: "hasRunBefore") == false {
+            KeychainWrapper.standard.removeObject(forKey: "passwordSaved")
+            KeychainWrapper.standard.removeObject(forKey: "savedToggleState")
+            KeychainWrapper.standard.removeObject(forKey: "emailSaved")
+            handleLogout()
+            
+            userDefaults.set(true, forKey: "hasRunBefore")
+            userDefaults.synchronize()
+        }
         window = UIWindow()
         window?.rootViewController = MainTabBarController()
         window?.makeKeyAndVisible()
-        attemptRegisterForNotification(application: application)
+        
+        let checkUidValue = Auth.auth().currentUser
+        if checkUidValue != nil {
+            attemptRegisterForNotification()
+        }
+        NotificationCenter.default.addObserver(self, selector: #selector(handleSuccessfulLogin), name: Notification.Name("SuccessfulLogin"), object: nil)
+        
         return true
     }
+    
+    @objc func handleSuccessfulLogin() {
+        print("Received Success Notifier. Do some Login Stuff Here... Maybe......")
+        attemptRegisterForNotification()
+    }
+    
+    func handleLogout() {
+        do{
+            try Auth.auth().signOut()
+        } catch let signOutError {
+            print("Failed to sign out for reason:", signOutError)
+        }
+    }
+    
+//    func checkUserAgainstAuth(completion: @escaping (_ success: Bool, _ error: NSError?) -> Void) {
+//        let currentUser = Auth.auth().currentUser
+//        if currentUser == nil {
+//            completion(false, nil)
+//        }
+//        currentUser?.getIDTokenForcingRefresh(true) { (idToken, error) in
+//            if let error = error {
+//                completion(false, error as NSError?)
+//                print(error.localizedDescription)
+//            } else {
+//                completion(true, nil)
+//            }
+//        }
+//    }
+    
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         print("Registered for notifications:", deviceToken)
@@ -64,9 +109,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
         }
     }
     
-    private func attemptRegisterForNotification(application: UIApplication) {
+    private func attemptRegisterForNotification() {
         Messaging.messaging().delegate = self
         UNUserNotificationCenter.current().delegate = self
+        
+        guard let myApplication = UIApplication.shared as UIApplication? else { return }
         
         let options: UNAuthorizationOptions = [.alert, .badge, .sound]
         UNUserNotificationCenter.current().requestAuthorization(options: options) { (granted, err) in
@@ -80,10 +127,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
                 print("Auth denied.")
             }
         }
-        application.registerForRemoteNotifications()
+        myApplication.registerForRemoteNotifications()
     }
     
-    fileprivate func handleFcmTokenStatus() {
+    func handleFcmTokenStatus() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         let checkLocation = Database.database().reference().child("users").child(uid).child("fcmToken")
         checkLocation.observeSingleEvent(of: .value) { (snapshot) in
@@ -126,7 +173,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         
         // Happens on ANY Load
+        
+        
+        
     }
+    
+    
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.

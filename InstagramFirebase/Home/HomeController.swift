@@ -34,12 +34,14 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     @objc func handleRefresh() {
         posts.removeAll()
+        collectionView?.reloadData()
         fetchAllPosts()
     }
     fileprivate func fetchAllPosts() {
         fetchPosts()
         fetchFollowingUserIds()
     }
+    
     fileprivate func fetchFollowingUserIds() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         Database.database().reference().child("following").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
@@ -53,29 +55,6 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         }) { (err) in
             print("Failed to fetch following user id's", err)
         }
-    }
-    func setupNavigationItems() {
-        let imageView = UIImageView(image: #imageLiteral(resourceName: "Instagram_logo_black"))
-        imageView.contentMode = .scaleAspectFit
-        
-        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 45))
-        imageView.frame = titleView.bounds
-        titleView.addSubview(imageView)
-        
-        navigationItem.titleView = titleView
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "camera3").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleCamera))
-    }
-    
-//    @objc func handleSend() {
-//        print("Handling send... Really just a placeholder ;) ")
-//    }
-    
-    @objc func handleCamera() {
-        print("Showing Camera")
-        
-        let cameraController = CameraController()
-        present(cameraController, animated: true, completion: nil)
     }
     
     var posts = [Post]()
@@ -97,8 +76,6 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
             
             dictionaries.forEach({ (key, value) in
                 guard let dictionary = value as? [String: Any] else { return }
-//                let imageUrl = dictionary["imageUrl"] as? String
-//                print("Image URL: \(imageUrl ?? "")")
                 
                 var post = Post(user: user, dictionary: dictionary)
                 post.id = key
@@ -121,11 +98,31 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
                 }, withCancel: { (err) in
                     print("Failed to fetch like info for post ", err)
                 })
+                
             })
         }) { (err) in
             print("Falied to fetch posts:", err)
         }
     }
+    
+    func setupNavigationItems() {
+        let imageView = UIImageView(image: #imageLiteral(resourceName: "Instagram_logo_black"))
+        imageView.contentMode = .scaleAspectFit
+        
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 45))
+        imageView.frame = titleView.bounds
+        titleView.addSubview(imageView)
+        
+        navigationItem.titleView = titleView
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "camera3").withRenderingMode(.alwaysOriginal), style: .plain, target: self, action: #selector(handleCamera))
+    }
+    
+    @objc func handleCamera() {
+        let cameraController = CameraController()
+        present(cameraController, animated: true, completion: nil)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         var height: CGFloat = 40 + 8 + 8 //username & userprofileImageView
@@ -135,6 +132,8 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         
         return CGSize(width: view.frame.width, height: height)
     }
+    
+    
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return posts.count
@@ -158,8 +157,6 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }
     
     func didLike(for cell: HomePostCell) {
-        print("Handling like inside of controller")
-        
         guard let indexPath = collectionView?.indexPath(for: cell) else { return }
         
         var post = self.posts[indexPath.item]

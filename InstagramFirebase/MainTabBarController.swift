@@ -8,6 +8,8 @@
 
 import UIKit
 import Firebase
+import NotificationCenter
+import UserNotifications
 
 class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     
@@ -29,8 +31,9 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.delegate = self
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleViewWillEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         
         if Auth.auth().currentUser == nil {
             //show if not logged in
@@ -40,9 +43,45 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
                 let navController = UINavigationController(rootViewController: loginController)
                 self.present(navController, animated: true, completion: nil)
             }
-            return
         }
+        
         setupViewControllers()
+    }
+    
+    @objc func handleViewWillEnterForeground(notification: NSNotification) {
+        checkUserAgainstAuth { (status, error) in
+            if status == true {
+                if Auth.auth().currentUser == nil {
+                    //show if not logged in
+                    //            print("Current user is", Auth.auth().currentUser ?? "")
+                    DispatchQueue.main.async {
+                        let loginController = LoginController()
+                        let navController = UINavigationController(rootViewController: loginController)
+                        self.present(navController, animated: true, completion: nil)
+                    }
+                    return
+                }
+                self.setupViewControllers()
+            } else {
+                DispatchQueue.main.async {
+                    let loginController = LoginController()
+                    let navController = UINavigationController(rootViewController: loginController)
+                    self.present(navController, animated: true, completion: nil)
+                }
+            }
+        }
+    }
+    
+    func checkUserAgainstAuth(completion: @escaping (_ success: Bool, _ error: NSError?) -> Void) {
+        guard let currentUser = Auth.auth().currentUser else { return }
+        currentUser.getIDTokenForcingRefresh(true) { (idToken, error) in
+            if let error = error {
+                completion(false, error as NSError?)
+                print(error.localizedDescription)
+            } else {
+                completion(true, nil)
+            }
+        }
     }
     
     func setupViewControllers() {

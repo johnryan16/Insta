@@ -13,6 +13,7 @@ class CommentsController: UICollectionViewController, UICollectionViewDelegateFl
     
     var post: Post?
     
+    
     let cellId = "cellId"
     
     override func viewDidLoad() {
@@ -24,15 +25,12 @@ class CommentsController: UICollectionViewController, UICollectionViewDelegateFl
         collectionView?.alwaysBounceVertical = true
         collectionView?.keyboardDismissMode = .interactive
         
-        
         /* ----______--------_________------??Maybe causes problem later??-----_______-----_____------____
         collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: -50, right: 0)
         collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: -50, right: 0)
          ------------------------------------------------------------------------------------------------
          */
-        
         collectionView?.register(CommentCell.self, forCellWithReuseIdentifier: cellId)
-        
         fetchComments()
  
     }
@@ -76,9 +74,7 @@ class CommentsController: UICollectionViewController, UICollectionViewDelegateFl
         
         let targetSize = CGSize(width: view.frame.width, height: 50)
         let estimatedSize = dummyCell.systemLayoutSizeFitting(targetSize)
-        
         let height = max(40 + 8 + 8, estimatedSize.height)
-        
         return CGSize(width: view.frame.width, height: height)
     }
     
@@ -89,7 +85,6 @@ class CommentsController: UICollectionViewController, UICollectionViewDelegateFl
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! CommentCell
         cell.comment = self.comments[indexPath.item]
-        
         return cell
     }
     
@@ -116,7 +111,6 @@ class CommentsController: UICollectionViewController, UICollectionViewDelegateFl
         containerView.addSubview(submitButton)
         submitButton.anchor(top: containerView.topAnchor, left: nil, bottom: containerView.bottomAnchor, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 12, width: 50, height: 0)
         
-        
         containerView.addSubview(commentTextField)
         self.commentTextField.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: containerView.bottomAnchor, right: submitButton.leftAnchor, paddingTop: 0, paddingLeft: 12, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
@@ -137,22 +131,31 @@ class CommentsController: UICollectionViewController, UICollectionViewDelegateFl
     @objc func handleSubmit() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
-        print("post id:", post?.id ?? "")
-        
-        print("Inserting comment:", commentTextField.text ?? "")
-        
         let postID = post?.id ?? ""
         let values = ["text": commentTextField.text ?? "", "creationDate": Date().timeIntervalSince1970, "uid": uid] as [String : Any]
         
-        Database.database().reference().child("comments").child(postID).childByAutoId().updateChildValues(values) { (err, ref) in
+        let userPostRef = Database.database().reference().child("comments").child(postID)
+        let ref = userPostRef.childByAutoId()
+        ref.updateChildValues(values) { (err, ref) in
             if let err = err {
                 print("Failed to enter comment", err)
                 return
             }
-            print("Successfully inserted comment.")
+            
+            let recipientUid = self.post?.user.uid ?? ""
+            let userRef = Database.database().reference().child("users").child(recipientUid).child("fcmToken")
+            userRef.observeSingleEvent(of: .value, with: { (snapshot) in
+                guard let value = snapshot.value else { return }  //this is Token here <<<--------
+                let tokenValue = ["recipientFcmToken": value]
+                ref.updateChildValues(tokenValue) { (err, ref) in
+                    if let err = err {
+                        print("Failed to enter comment", err)
+                        return
+                    }
+                }
+            })
         }
     }
-    
     override var inputAccessoryView: UIView? {
         get {
             return containerView
@@ -162,7 +165,6 @@ class CommentsController: UICollectionViewController, UICollectionViewDelegateFl
     override var canBecomeFirstResponder: Bool {
         return true
     }
-    
 }
 
 

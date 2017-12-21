@@ -40,6 +40,7 @@ class LoginController: UIViewController {
         tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
         tf.borderStyle = .roundedRect
         tf.font = UIFont.systemFont(ofSize: 14)
+        tf.clearButtonMode = .whileEditing
         tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
         return tf
     }()
@@ -51,6 +52,7 @@ class LoginController: UIViewController {
         tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
         tf.borderStyle = .roundedRect
         tf.font = UIFont.systemFont(ofSize: 14)
+        tf.clearButtonMode = .whileEditing
         tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
         return tf
     }()
@@ -92,21 +94,23 @@ class LoginController: UIViewController {
         guard let password = passwordTextField.text else { return }
         
         Auth.auth().signIn(withEmail: email, password: password) { (user, err) in
-            if let err = err {
-                print("Failed to sign in with email:", err)
-                self.handleError()
+            if err != nil {
+                if let errorCode = AuthErrorCode(rawValue: err!._code) {
+                    switch errorCode {
+                    case .userNotFound: self.handleUserNotFound()
+                    case .wrongPassword: self.handleIncorrectPassword()
+                    default: print("Other error.")
+                    }
+                }
                 return
             }
-//            if Auth.auth().currentUser?.isEmailVerified == true {
-//            print("Successfully logged back in with user:", user?.uid ?? "")
-//
             guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { return }
-//
             if self.keychainPassword == nil {
                 KeychainWrapper.standard.set(email, forKey: "emailSaved")
                 KeychainWrapper.standard.set(password, forKey: "passwordSaved")
             }
             
+            NotificationCenter.default.post(name: Notification.Name("SuccessfulLogin"), object: nil)
             
             mainTabBarController.setupViewControllers()
             self.dismiss(animated: true, completion: nil)
@@ -127,15 +131,7 @@ class LoginController: UIViewController {
 //            }
 //        }
     }
-    
-    fileprivate func handleFcmTokenStatus() {
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        let location = Database.database().reference().child("users").child(uid).child("fcmToken")
-        print("Stored DB Token is", location)
-        
-    }
-    
-    fileprivate func handleError() {
+    fileprivate func handleIncorrectPassword() {
         guard let username = emailTextField.text else { return }
         let alert = UIAlertController(title: "Incorrect password for \(username)" , message: "The password you entered is incorrect. Please try again.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Try Again", style: .cancel, handler: { (_) in
@@ -147,7 +143,16 @@ class LoginController: UIViewController {
         }))
         self.present(alert, animated: true, completion: nil)
     }
-    
+    fileprivate func handleUserNotFound() {
+        let alert = UIAlertController(title: "Incorrect Username" , message: "The username you entered doesn't appear to belong to an account. Please check your username and try again.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Try Again", style: .cancel, handler: nil))
+        
+        let controller = SignUpController()
+        alert.addAction(UIAlertAction(title: "Sign Up!", style: .default, handler: { (_) in
+            self.navigationController?.pushViewController(controller, animated: true)
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
     let forgotPasswordButton: UILabel = {
         let questionText = UILabel()
         questionText.text = "Forgot your password?"
@@ -162,11 +167,9 @@ class LoginController: UIViewController {
         button.addTarget(self, action: #selector(handleForgotPassword), for: .touchUpInside)
         return button
     }()
-    
     @objc func handleForgotPassword() {
         let forgotPasswordController = ForgotPassword()
         navigationController?.pushViewController(forgotPasswordController, animated: true)
-        
     }
     
     let dontHaveAccountButton: UIButton = {
@@ -184,6 +187,7 @@ class LoginController: UIViewController {
 
         navigationController?.pushViewController(signUpController, animated: true)
     }
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -194,6 +198,10 @@ class LoginController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleAppDidBecomeActive), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+        
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(endEditing)))
         
         view.addSubview(logoContainerView)
         logoContainerView.anchor(top: view.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 150)
@@ -206,14 +214,32 @@ class LoginController: UIViewController {
         
         setupInputFields()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(handleViewWillEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+        handleBiometricCheck()
+        
         }
     
-    @objc func handleViewWillEnterForeground(notification: NSNotification) {
+    @objc func endEditing(gesture: UITapGestureRecognizer) {
+        if emailTextField.isFirstResponder {
+        emailTextField.endEditing(true)
+        }
+        if passwordTextField.isFirstResponder {
+            passwordTextField.endEditing(true)
+        }
+        else {
+            return
+            //ToDo: Something else
+        }
+    }
+    
+    @objc func handleAppDidBecomeActive(notification: NSNotification) {
+        handleBiometricCheck()
+    }
+    
+    func handleBiometricCheck() {
         let presentTouchID = KeychainWrapper.standard.bool(forKey: "savedToggleState")
-        if self.keychainPassword != nil && presentTouchID == true {
-        callTouchId()
-        print("Called Touch ID")
+        if keychainPassword != nil && presentTouchID == true {
+            callTouchId()
+            print("Called Touch ID")
         }
     }
     
