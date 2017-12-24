@@ -91,7 +91,6 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         guard let uid = user?.uid else { return }
         let ref = Database.database().reference().child("posts").child(uid)
         
-        //Need to implement some pagination of data at some point here-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/-/
         ref.queryOrdered(byChild: "creationDate").observe(.childAdded, with: { (snapshot) in
             print(snapshot.key, snapshot.value as Any)
             

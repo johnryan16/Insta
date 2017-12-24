@@ -14,7 +14,7 @@ import NotificationCenter
 
 //ToDo: Implement no network connection logic
 
-class LoginController: UIViewController {
+class LoginController: UIViewController, UITextFieldDelegate {
 
     let logoContainerView: UIView = {
         let view = UIView()
@@ -41,6 +41,8 @@ class LoginController: UIViewController {
         tf.borderStyle = .roundedRect
         tf.font = UIFont.systemFont(ofSize: 14)
         tf.clearButtonMode = .whileEditing
+        tf.enablesReturnKeyAutomatically = true
+        tf.returnKeyType = .next
         tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
         return tf
     }()
@@ -53,6 +55,8 @@ class LoginController: UIViewController {
         tf.borderStyle = .roundedRect
         tf.font = UIFont.systemFont(ofSize: 14)
         tf.clearButtonMode = .whileEditing
+        tf.enablesReturnKeyAutomatically = true
+        tf.returnKeyType = .go
         tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
         return tf
     }()
@@ -111,6 +115,12 @@ class LoginController: UIViewController {
             }
             
             NotificationCenter.default.post(name: Notification.Name("SuccessfulLogin"), object: nil)
+            
+            if self.emailTextField.isFirstResponder {
+                self.emailTextField.resignFirstResponder()
+            } else if self.passwordTextField.isFirstResponder && self.loginButton.isEnabled {
+                self.passwordTextField.resignFirstResponder()
+            }
             
             mainTabBarController.setupViewControllers()
             self.dismiss(animated: true, completion: nil)
@@ -199,6 +209,7 @@ class LoginController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         NotificationCenter.default.addObserver(self, selector: #selector(handleAppDidBecomeActive), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
         
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(endEditing)))
@@ -267,7 +278,23 @@ class LoginController: UIViewController {
         }
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        handleInputsFirstResponders()
+        return true
+    }
+    
+    fileprivate func handleInputsFirstResponders() {
+        if emailTextField.isFirstResponder {
+            passwordTextField.becomeFirstResponder()
+        } else if passwordTextField.isFirstResponder && loginButton.isEnabled {
+            passwordTextField.resignFirstResponder()
+            handleLogin()
+        }
+    }
+
+    
     fileprivate func setupInputFields() {
+        
         let stackView = UIStackView(arrangedSubviews: [emailTextField, passwordTextField, loginButton])
         stackView.axis = .vertical
         stackView.spacing = 10
@@ -281,6 +308,10 @@ class LoginController: UIViewController {
         
         view.addSubview(resetPasswordButton)
         resetPasswordButton.anchor(top: nil, left: forgotPasswordButton.rightAnchor, bottom: forgotPasswordButton.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 4, paddingBottom: -5, paddingRight: 0, width: 0, height: 0)
+        
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        
     }
     
     

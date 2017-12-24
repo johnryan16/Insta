@@ -24,7 +24,21 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
         
         collectionView?.register(PhotoSelectorHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerId)
         
-        fetchPhotos()
+        handleAuthStatus()
+        
+        
+    }
+    
+    func handleAuthStatus() {
+        let photoAuthStatus = PHPhotoLibrary.authorizationStatus()
+        if photoAuthStatus != .authorized {
+            PHPhotoLibrary.requestAuthorization({ (status) in
+                print("New Auth status is", status.rawValue )
+                self.fetchPhotos()
+            })
+        } else {
+            fetchPhotos()
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -109,9 +123,6 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
             }
 
         }
-        
-        
-        
         return header
     }
     
