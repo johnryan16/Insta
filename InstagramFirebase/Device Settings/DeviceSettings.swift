@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import Firebase
+import LocalAuthentication
 
 class DeviceSettings: UIViewController {
     
@@ -64,6 +65,23 @@ class DeviceSettings: UIViewController {
         alertController.addAction(cancelAction)
         alertController.addAction(okAction)
         self.present(alertController, animated: true, completion: nil)
+    }
+    
+    let myContext = LAContext()
+    var authError: NSError?
+    let myLocalizedReason = "Enabling Bios"
+    
+    
+    func handleBiometrics() {
+        if #available(iOS 8.0, *) {
+            if myContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &self.authError) {
+                myContext.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: myLocalizedReason, reply: { (success, error) in
+                    if success {
+                        
+                    }
+                })
+            }
+        }
     }
     
     func handleReauthErrorWindow() {

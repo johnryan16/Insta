@@ -75,13 +75,10 @@ class SharePhotoController: UIViewController {
     }
     
     static let updateFeedNotificationName = NSNotification.Name(rawValue: "UpdateFeed")
-
     
     fileprivate func saveToDatabaseWithImageUrl(imageUrl: String) {
         guard let caption = textView.text else { return }
-        
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        
         guard let postImage = selectedImage else { return }
         
         let userPostRef = Database.database().reference().child("posts").child(uid)

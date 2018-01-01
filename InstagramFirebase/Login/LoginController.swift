@@ -92,6 +92,10 @@ class LoginController: UIViewController, UITextFieldDelegate {
         button.isEnabled = false
         return button
     }()
+    
+   
+    
+    
 
     @objc func handleLogin() {
         guard let email = emailTextField.text else { return }
@@ -103,8 +107,10 @@ class LoginController: UIViewController, UITextFieldDelegate {
                     switch errorCode {
                     case .userNotFound: self.handleUserNotFound()
                     case .wrongPassword: self.handleIncorrectPassword()
+                    case .networkError: self.handleNetworkError()
                     default: print("Other error.")
                     }
+                    print("The error code is", err ?? "")
                 }
                 return
             }
@@ -125,22 +131,40 @@ class LoginController: UIViewController, UITextFieldDelegate {
             mainTabBarController.setupViewControllers()
             self.dismiss(animated: true, completion: nil)
             }
-//            else {
-//                print("Email NOT Verified")
-//                let alert = UIAlertController(title: "Email Not Verified", message: "Please verify your email address.", preferredStyle: .alert)
-//                alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (_) in
-//                    do{
-//                        try Auth.auth().signOut()
-//                        KeychainWrapper.standard.removeObject(forKey: "passwordSaved")
-//                    } catch let signOutErr {
-//                        print("Failed to sign out for some reason:", signOutErr)
-//                    }
-//                    self.passwordTextField.text?.removeAll()
-//                }))
-//                self.present(alert, animated: true, completion: nil)
-//            }
-//        }
+//Email Validation Code goes here <<<<<-------------
     }
+    
+    //            else {
+    //                print("Email NOT Verified")
+    //                let alert = UIAlertController(title: "Email Not Verified", message: "Please verify your email address.", preferredStyle: .alert)
+    //                alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (_) in
+    //                    do{
+    //                        try Auth.auth().signOut()
+    //                        KeychainWrapper.standard.removeObject(forKey: "passwordSaved")
+    //                    } catch let signOutErr {
+    //                        print("Failed to sign out for some reason:", signOutErr)
+    //                    }
+    //                    self.passwordTextField.text?.removeAll()
+    //                }))
+    //                self.present(alert, animated: true, completion: nil)
+    //            }
+    //        }
+    
+    
+    fileprivate func handleNetworkError() {
+        let alert = UIAlertController(title: "Connection Problem" , message: "You don't seem to be connected to any network.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: nil))
+        
+        alert.addAction(UIAlertAction(title: "Retry", style: .cancel, handler: { (result) in
+            
+            self.handleLogin()
+        }))
+
+        present(alert, animated: true, completion: nil)
+    }
+    
+    
+    
     fileprivate func handleIncorrectPassword() {
         guard let username = emailTextField.text else { return }
         let alert = UIAlertController(title: "Incorrect password for \(username)" , message: "The password you entered is incorrect. Please try again.", preferredStyle: .alert)
@@ -205,6 +229,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
     let myContext = LAContext()
     let myLocalizedReasonString = "Please Sign On."
     var authError: NSError?
+    let myLocalizedFalbackTitle = "Try Again"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -230,8 +255,12 @@ class LoginController: UIViewController, UITextFieldDelegate {
         }
     
     @objc func endEditing(gesture: UITapGestureRecognizer) {
+        handleEndEditing()
+    }
+    
+    fileprivate func handleEndEditing() {
         if emailTextField.isFirstResponder {
-        emailTextField.endEditing(true)
+            emailTextField.endEditing(true)
         }
         if passwordTextField.isFirstResponder {
             passwordTextField.endEditing(true)
@@ -249,7 +278,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
     func handleBiometricCheck() {
         let presentTouchID = KeychainWrapper.standard.bool(forKey: "savedToggleState")
         if keychainPassword != nil && presentTouchID == true {
-            callTouchId()
+            callBiometricAuth()
             print("Called Touch ID")
         }
     }
@@ -258,9 +287,11 @@ class LoginController: UIViewController, UITextFieldDelegate {
     
     var keychainUser: String? = KeychainWrapper.standard.string(forKey: "emailSaved")
     
-    func callTouchId() {
+    func callBiometricAuth() {
         if #available(iOS 8.0, *) {
             if self.myContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &self.authError) {
+                myContext.localizedFallbackTitle = "Try Again."
+                
                 myContext.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: myLocalizedReasonString, reply: { (success, err) in
                     if success {
                         DispatchQueue.main.async {
@@ -279,11 +310,11 @@ class LoginController: UIViewController, UITextFieldDelegate {
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        handleInputsFirstResponders()
+        handleMakeInputsFirstResponders()
         return true
     }
     
-    fileprivate func handleInputsFirstResponders() {
+    fileprivate func handleMakeInputsFirstResponders() {
         if emailTextField.isFirstResponder {
             passwordTextField.becomeFirstResponder()
         } else if passwordTextField.isFirstResponder && loginButton.isEnabled {

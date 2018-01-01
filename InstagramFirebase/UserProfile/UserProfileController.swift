@@ -148,8 +148,6 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         if indexPath.item == self.posts.count - 1 && !isFinishedPaging {
             paginatePosts()
         }
-        
-        
         if isGridView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! UserProfilePhotoCell
             cell.post = posts[indexPath.item]
@@ -159,7 +157,6 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
             cell.post = posts[indexPath.item]
             return cell
         }
-        
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {

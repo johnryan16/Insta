@@ -8,7 +8,7 @@
 
 import UIKit
 import Photos
-//haha
+
 
 class PhotoSelectorController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     let cellId = "cellId"

@@ -25,11 +25,6 @@ class CommentsController: UICollectionViewController, UICollectionViewDelegateFl
         collectionView?.alwaysBounceVertical = true
         collectionView?.keyboardDismissMode = .interactive
         
-        /* ----______--------_________------??Maybe causes problem later??-----_______-----_____------____
-        collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: -50, right: 0)
-        collectionView?.scrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: -50, right: 0)
-         ------------------------------------------------------------------------------------------------
-         */
         collectionView?.register(CommentCell.self, forCellWithReuseIdentifier: cellId)
         fetchComments()
  
@@ -141,7 +136,6 @@ class CommentsController: UICollectionViewController, UICollectionViewDelegateFl
                 print("Failed to enter comment", err)
                 return
             }
-            
             let recipientUid = self.post?.user.uid ?? ""
             let userRef = Database.database().reference().child("users").child(recipientUid).child("fcmToken")
             userRef.observeSingleEvent(of: .value, with: { (snapshot) in
