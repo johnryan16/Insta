@@ -23,16 +23,12 @@ class UserSearchController: UICollectionViewController, UICollectionViewDelegate
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
         if searchText.isEmpty {
-            filteredUsers = users
+            filteredUsers = []
         } else {
             filteredUsers = self.users.filter({ (user) -> Bool in
-                return user.username.lowercased().contains(searchText.lowercased())
+                return (user.username.lowercased().contains(searchText.lowercased()))
             })
         }
-        
-        
-        
-
         self.collectionView?.reloadData()
     }
     
@@ -49,12 +45,8 @@ class UserSearchController: UICollectionViewController, UICollectionViewDelegate
         searchBar.anchor(top: navBar?.topAnchor, left: navBar?.leftAnchor, bottom: navBar?.bottomAnchor, right: navBar?.rightAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
         
         collectionView?.register(UserSearchCell.self, forCellWithReuseIdentifier: cellId)
-        
         collectionView?.alwaysBounceVertical = true
         collectionView?.keyboardDismissMode = .onDrag
-        
-        
-        
         fetchUsers()
     }
     
@@ -64,7 +56,6 @@ class UserSearchController: UICollectionViewController, UICollectionViewDelegate
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
         searchBar.isHidden = true
         searchBar.resignFirstResponder()
         
@@ -80,33 +71,26 @@ class UserSearchController: UICollectionViewController, UICollectionViewDelegate
     var users = [User]()
     fileprivate func fetchUsers() {
         print("Fetching Users")
-        
         let ref = Database.database().reference().child("users")
         ref.observe(.value, with: { (snapshot) in
             print(snapshot.value ?? "")
             
             guard let dictionaries = snapshot.value as? [String: Any] else { return }
-            
+            print("The dictionaries are:", dictionaries)
             dictionaries.forEach({ (key, value) in
-                
-                if key == Auth.auth().currentUser?.uid {
-                    print("found myself --> Omit")
-                }
-                
                 guard let userDictionary = value as? [String: Any] else { return }
                 
                 let user = User(uid: key, dictionary: userDictionary)
+                
+                if key == Auth.auth().currentUser?.uid {
+                    return
+                }
                 self.users.append(user)
             })
             
-            
-            
             self.users.sort(by: { (u1, u2) -> Bool in
-                
                 return u1.username.compare(u2.username)  == .orderedAscending
-                
             })
-            
             self.filteredUsers = self.users
             self.collectionView?.reloadData()
             

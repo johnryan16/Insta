@@ -92,7 +92,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
             print(followerId)
             
             //Push user profile controller for folloerID HERE
-            
             let userProfileController = UserProfileController(collectionViewLayout: UICollectionViewFlowLayout())
             userProfileController.userId = followerId
             

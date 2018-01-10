@@ -33,6 +33,8 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         super.viewDidLoad()
         self.delegate = self
         
+        
+        
         NotificationCenter.default.addObserver(self, selector: #selector(handleViewWillEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         
         if Auth.auth().currentUser == nil {
@@ -104,6 +106,7 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         userProfileNavController.tabBarItem.selectedImage = #imageLiteral(resourceName: "profile_selected")
         
         tabBar.tintColor = .black
+        tabBar.isTranslucent = false
         
         viewControllers = [homeNavController,
                            searchNavController,

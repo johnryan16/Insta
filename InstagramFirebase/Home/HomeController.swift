@@ -76,8 +76,14 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
             
             dictionaries.forEach({ (key, value) in
                 guard let dictionary = value as? [String: Any] else { return }
-                
+                let currentActiveUser = Auth.auth().currentUser?.uid
                 var post = Post(user: user, dictionary: dictionary)
+                let posterUid = post.user.uid
+                
+                if posterUid == currentActiveUser {
+                    return
+                }
+                
                 post.id = key
                 
                 guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -132,8 +138,6 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         
         return CGSize(width: view.frame.width, height: height)
     }
-    
-    
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return posts.count

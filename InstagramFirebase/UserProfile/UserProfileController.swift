@@ -123,7 +123,9 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
                 try Auth.auth().signOut()
                 let loginController = LoginController()
                 let navController = UINavigationController(rootViewController: loginController)
-                KeychainWrapper.standard.removeObject(forKey: "passwordSaved")
+                
+                NotificationCenter.default.post(name: Notification.Name("SuccessfulLogout"), object: nil)
+                
                 self.present(navController, animated: true, completion: nil)
             } catch let signOutErr {
                 print("Failed to sign out for some reason:", signOutErr)

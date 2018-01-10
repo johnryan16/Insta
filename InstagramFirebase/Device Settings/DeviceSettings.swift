@@ -22,18 +22,26 @@ class DeviceSettings: UIViewController {
     }()
     
     @objc func switchDidChange() {
-        if currentToggleState == false {
-            handleRequestPasswordToEnableAlert()
-            print("Toggle State is now", currentToggleState ?? "")
+        let canAuthenticate = LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &self.authError)
+        if canAuthenticate {
+            if currentToggleState == false {
+                //            handleBiometricsEnable()
+                currentToggleState = true
+                print("Toggle State is now", currentToggleState ?? "")
+                KeychainWrapper.standard.set(true, forKey: "savedToggleState")
+            }
+            else {
+                currentToggleState = false
+                print("Toggle State is now", currentToggleState ?? "")
+                KeychainWrapper.standard.set(false, forKey: "savedToggleState")
+            }
         }
-        else if currentToggleState == true {
-            currentToggleState = false
-            print("Toggle State is now", currentToggleState ?? "")
-            KeychainWrapper.standard.set(false, forKey: "savedToggleState")
+        else {
+            print("Biometrics not enabled on system.")
         }
     }
     
-    func handleRequestPasswordToEnableAlert() {
+    func handleBiometricsEnable() {
         let alertController = UIAlertController(title: "Enter Password", message: "Enter your password to enable TouchID", preferredStyle: .alert)
         alertController.addTextField { (password) in
             password.isSecureTextEntry = true
@@ -52,7 +60,7 @@ class DeviceSettings: UIViewController {
                     print("There's a reauth error", err)
                     self.touchSwitch.isOn = false
                     self.currentToggleState = false
-                    self.handleReauthErrorWindow()
+//                    self.handleReauthErrorWindow()
                     print("Toggle State is now", self.currentToggleState ?? "")
                     KeychainWrapper.standard.set(false, forKey: "savedToggleState")
                     return
@@ -72,32 +80,38 @@ class DeviceSettings: UIViewController {
     let myLocalizedReason = "Enabling Bios"
     
     
-    func handleBiometrics() {
+    func checkBiometrics() -> Bool {
+        var authenticated = false
         if #available(iOS 8.0, *) {
             if myContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &self.authError) {
                 myContext.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: myLocalizedReason, reply: { (success, error) in
                     if success {
-                        
+                        authenticated = true
+                    }
+                    if success != true {
+                        authenticated = false
+                        print("There was an error:", error ?? "")
                     }
                 })
             }
         }
+        return authenticated
     }
     
-    func handleReauthErrorWindow() {
-        let errorAlert = UIAlertController(title: "Incorrect Login Credentials", message: "Your email and/or password are incorrect.", preferredStyle: .alert)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (result) in
-            print("Canceling at Error Popup.")
-        }
-        let tryAgainAction = UIAlertAction(title: "Try Again", style: .default, handler: { (result) in
-            self.handleRequestPasswordToEnableAlert()
-        })
-        errorAlert.addAction(tryAgainAction)
-        errorAlert.addAction(cancelAction)
-        
-        self.present(errorAlert, animated: true, completion: nil)
-    }
     
+//    func handleReauthErrorWindow() {
+//        let errorAlert = UIAlertController(title: "Incorrect Login Credentials", message: "Your email and/or password are incorrect.", preferredStyle: .alert)
+//        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (result) in
+//            print("Canceling at Error Popup.")
+//        }
+//        let tryAgainAction = UIAlertAction(title: "Try Again", style: .default, handler: { (result) in
+//            self.handleRequestPasswordToEnableAlert()
+//        })
+//        errorAlert.addAction(tryAgainAction)
+//        errorAlert.addAction(cancelAction)
+//
+//        self.present(errorAlert, animated: true, completion: nil)
+//    }
     
     func loadSwitchState() {
         let savedToggleState = KeychainWrapper.standard.bool(forKey: "savedToggleState")
@@ -133,9 +147,8 @@ class DeviceSettings: UIViewController {
         view.addSubview(touchText)
         touchText.anchor(top: view.safeAreaLayoutGuide.centerYAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 35, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
-        view.addSubview(touchSwitch)
-        
         loadSwitchState()
+        view.addSubview(touchSwitch)
         touchSwitch.anchor(top: view.safeAreaLayoutGuide.centerYAnchor, left: touchText.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 5, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
     }
     
@@ -145,9 +158,12 @@ class DeviceSettings: UIViewController {
     }
     
     fileprivate func handleKeychainUpdates() {
-        if currentToggleState == false {
+        if currentToggleState != true {
             KeychainWrapper.standard.removeObject(forKey: "passwordSaved")
             print("Removed Password from Keychain")
+        }
+        if currentToggleState == true {
+            KeychainWrapper.standard.set(true, forKey: "savedToggleState")
         }
     }
 }
