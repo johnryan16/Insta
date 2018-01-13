@@ -56,7 +56,6 @@ class CommentInputAccessoryView: UIView {
         }
         setupLineSeparatorView()
     }
-   
     
     override var intrinsicContentSize: CGSize {
         return .zero

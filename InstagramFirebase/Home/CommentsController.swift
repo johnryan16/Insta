@@ -13,7 +13,6 @@ class CommentsController: UICollectionViewController, UICollectionViewDelegateFl
     
     var post: Post?
     
-    
     let cellId = "cellId"
     
     override func viewDidLoad() {
@@ -133,11 +132,14 @@ class CommentsController: UICollectionViewController, UICollectionViewDelegateFl
             }
     }
     
+    
     override var inputAccessoryView: UIView? {
         get {
             return containerView
         }
     }
+    
+    
     
     override var canBecomeFirstResponder: Bool {
         return true

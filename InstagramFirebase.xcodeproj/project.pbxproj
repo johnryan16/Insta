@@ -35,6 +35,7 @@
 		1BA17DA11F5890B600837AF1 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA17DA01F5890B600837AF1 /* Extensions.swift */; };
 		1BA17DA31F589E2D00837AF1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1BA17DA21F589E2D00837AF1 /* GoogleService-Info.plist */; };
 		1BBFD12B1FBF4B36002DD26B /* DeviceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBFD12A1FBF4B36002DD26B /* DeviceSettings.swift */; };
+		1BDE01FF20071B7700207D11 /* LoginInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDE01FE20071B7700207D11 /* LoginInputAccessoryView.swift */; };
 		1BE9FBE61F58CE49000F3B65 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE9FBE51F58CE49000F3B65 /* MainTabBarController.swift */; };
 		1BE9FBE81F58CFA8000F3B65 /* UserProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE9FBE71F58CFA8000F3B65 /* UserProfileController.swift */; };
 		1BE9FBEB1F58DE11000F3B65 /* UserProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE9FBEA1F58DE11000F3B65 /* UserProfileHeader.swift */; };
@@ -79,6 +80,7 @@
 		1BA17DA01F5890B600837AF1 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		1BA17DA21F589E2D00837AF1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1BBFD12A1FBF4B36002DD26B /* DeviceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSettings.swift; sourceTree = "<group>"; };
+		1BDE01FE20071B7700207D11 /* LoginInputAccessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginInputAccessoryView.swift; sourceTree = "<group>"; };
 		1BE9FBE51F58CE49000F3B65 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		1BE9FBE71F58CFA8000F3B65 /* UserProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileController.swift; sourceTree = "<group>"; };
 		1BE9FBEA1F58DE11000F3B65 /* UserProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileHeader.swift; sourceTree = "<group>"; };
@@ -127,12 +129,12 @@
 		1B2140041F63A05E00453E08 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				1B434BF62001C6220022D312 /* CommentInputAccessoryView.swift */,
+				1BEA60AB1F71B58A001A6B25 /* CommentsController.swift */,
+				1B434BF82001DE850022D312 /* CommentInputTextView.swift */,
 				1B2140051F63A07300453E08 /* HomeController.swift */,
 				1B2140071F63A2F400453E08 /* HomePostCell.swift */,
-				1BEA60AB1F71B58A001A6B25 /* CommentsController.swift */,
 				1BEA60AD1F71D488001A6B25 /* CommentCell.swift */,
-				1B434BF62001C6220022D312 /* CommentInputAccessoryView.swift */,
-				1B434BF82001DE850022D312 /* CommentInputTextView.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -200,11 +202,11 @@
 				1BFC3F711F797AB500F6726C /* InstagramFirebase.entitlements */,
 				1B95CB441F6A1DEB00F2CFE4 /* Camera */,
 				1B5623D11F65DC7600761562 /* Search */,
+				1BE9FBEC1F592EE8000F3B65 /* Login */,
 				1B2140041F63A05E00453E08 /* Home */,
 				1B65701F1F5E3EA900EC1ECD /* Models */,
 				1B1C4A461F5CC08F00B60604 /* AddPhoto */,
 				1BBFD1291FBF4B16002DD26B /* Device Settings */,
-				1BE9FBEC1F592EE8000F3B65 /* Login */,
 				1BE9FBE91F58DDFD000F3B65 /* UserProfile */,
 				1BA17D9F1F58909C00837AF1 /* Utils */,
 				1BA17D8D1F58849200837AF1 /* AppDelegate.swift */,
@@ -251,8 +253,9 @@
 			isa = PBXGroup;
 			children = (
 				1BA17D8F1F58849200837AF1 /* SignUpController.swift */,
-				1BE9FBED1F592EF6000F3B65 /* LoginController.swift */,
 				1B8C8C2C1FC2045800B93150 /* ForgotPassword.swift */,
+				1BE9FBED1F592EF6000F3B65 /* LoginController.swift */,
+				1BDE01FE20071B7700207D11 /* LoginInputAccessoryView.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -414,6 +417,7 @@
 			files = (
 				1B640FB91FBE282B005B2751 /* KeychainItemAccessibility.swift in Sources */,
 				1B5623D51F65E10800761562 /* UserSearchCell.swift in Sources */,
+				1BDE01FF20071B7700207D11 /* LoginInputAccessoryView.swift in Sources */,
 				1B5623D01F65DAA600761562 /* FirebaseUtils.swift in Sources */,
 				1B65701E1F5DFCA600EC1ECD /* SharePhotoController.swift in Sources */,
 				1B434BF72001C6220022D312 /* CommentInputAccessoryView.swift in Sources */,
