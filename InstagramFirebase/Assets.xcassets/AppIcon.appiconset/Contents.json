@@ -3,49 +3,49 @@
     {
       "size" : "20x20",
       "idiom" : "iphone",
-      "filename" : "Logo 40x40.png",
+      "filename" : "App_Logo_40x40.png",
       "scale" : "2x"
     },
     {
       "size" : "20x20",
       "idiom" : "iphone",
-      "filename" : "Logo 60x60.png",
+      "filename" : "App_Logo_60x60.png",
       "scale" : "3x"
     },
     {
       "size" : "29x29",
       "idiom" : "iphone",
-      "filename" : "Logo 58x58.png",
+      "filename" : "App_Logo_58x58.png",
       "scale" : "2x"
     },
     {
       "size" : "29x29",
       "idiom" : "iphone",
-      "filename" : "Logo 87x87.png",
+      "filename" : "App_Logo_87x87.png",
       "scale" : "3x"
     },
     {
       "size" : "40x40",
       "idiom" : "iphone",
-      "filename" : "Logo 80x80-1.png",
+      "filename" : "App_Logo_80x80.png",
       "scale" : "2x"
     },
     {
       "size" : "40x40",
       "idiom" : "iphone",
-      "filename" : "Logo 120x120-1.png",
+      "filename" : "App_Logo_120x120-1.png",
       "scale" : "3x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "Logo 120x120.png",
+      "filename" : "App_Logo_120x120.png",
       "scale" : "2x"
     },
     {
       "size" : "60x60",
       "idiom" : "iphone",
-      "filename" : "Logo 180x180.png",
+      "filename" : "App_Logo_180x180.png",
       "scale" : "3x"
     },
     {
@@ -56,7 +56,7 @@
     {
       "size" : "20x20",
       "idiom" : "ipad",
-      "filename" : "Logo 40x40-1.png",
+      "filename" : "App_Logo_40x40-1.png",
       "scale" : "2x"
     },
     {
@@ -67,7 +67,7 @@
     {
       "size" : "29x29",
       "idiom" : "ipad",
-      "filename" : "Logo 58x58-1.png",
+      "filename" : "App_Logo_58x58-1.png",
       "scale" : "2x"
     },
     {
@@ -78,7 +78,7 @@
     {
       "size" : "40x40",
       "idiom" : "ipad",
-      "filename" : "Logo 80x80.png",
+      "filename" : "App_Logo_80x80-1.png",
       "scale" : "2x"
     },
     {
@@ -89,19 +89,19 @@
     {
       "size" : "76x76",
       "idiom" : "ipad",
-      "filename" : "Logo 152x152.png",
+      "filename" : "App_Logo_152x152.png",
       "scale" : "2x"
     },
     {
       "size" : "83.5x83.5",
       "idiom" : "ipad",
-      "filename" : "Logo 167x167.png",
+      "filename" : "App_Logo_167x167.png",
       "scale" : "2x"
     },
     {
       "size" : "1024x1024",
       "idiom" : "ios-marketing",
-      "filename" : "Logo 1024x1024.png",
+      "filename" : "App_Logo_1024x1024.png",
       "scale" : "1x"
     }
   ],

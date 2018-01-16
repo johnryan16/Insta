@@ -49,7 +49,7 @@ class LoginController: UIViewController, UITextFieldDelegate, LoginInputAccessor
                 if let errorCode = AuthErrorCode(rawValue: err!._code) {
                     switch errorCode {
                     case .userNotFound: self.handleUserNotFound()
-                    case .wrongPassword: self.handleIncorrectPassword(username: emailTextString, password: passwordTextString)
+                    case .wrongPassword: self.handleIncorrectPassword(username: emailTextString, passwordTextString)
                     case .networkError: self.handleNetworkError()
                     default: print("Other error.")
                     }
@@ -73,11 +73,11 @@ class LoginController: UIViewController, UITextFieldDelegate, LoginInputAccessor
         
     }
     
-    func handleIncorrectPassword(username: String, password: String) {
+    func handleIncorrectPassword(username: String, _ password: String) {
         
         let alert = UIAlertController(title: "Incorrect password for \(username)" , message: "The password you entered is incorrect. Please try again.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Try Again", style: .cancel, handler: { (_) in
-//            self.passwordTextField.text?.removeAll()
+            self.loginView.clearPasswordTextField()
         }))
         let controller = ForgotPassword()
         alert.addAction(UIAlertAction(title: "Forgot Password", style: .default, handler: { (_) in
