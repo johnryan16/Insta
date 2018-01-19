@@ -19,6 +19,7 @@ class LoginController: UIViewController, UITextFieldDelegate, LoginInputAccessor
     var keychainPassword: String? = KeychainWrapper.standard.string(forKey: "passwordSaved")
     var keychainUser: String? = KeychainWrapper.standard.string(forKey: "emailSaved")
     
+    
     let userCallBiometricsButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Face ID!", for: .normal)
@@ -29,8 +30,11 @@ class LoginController: UIViewController, UITextFieldDelegate, LoginInputAccessor
     
     @objc func handleUserRequestBiometrics() {
         handleBiometricCheck { (success) in
-            if success != true {
-                self.handleBiometicsUnavailable()
+            if success {
+                self.callBiometricAuth()
+            }
+            else {
+                return
             }
         }
     }
@@ -58,10 +62,10 @@ class LoginController: UIViewController, UITextFieldDelegate, LoginInputAccessor
                 return
             }
             guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { return }
-//            if self.keychainPassword == nil {
-//                KeychainWrapper.standard.set(email, forKey: "emailSaved")
-//                KeychainWrapper.standard.set(password, forKey: "passwordSaved")
-//            }
+            if self.keychainPassword == nil {
+                KeychainWrapper.standard.set(emailTextString, forKey: "emailSaved")
+                KeychainWrapper.standard.set(passwordTextString, forKey: "passwordSaved")
+            }
             NotificationCenter.default.post(name: Notification.Name("SuccessfulLogin"), object: nil)
             
             mainTabBarController.setupViewControllers()
@@ -69,8 +73,14 @@ class LoginController: UIViewController, UITextFieldDelegate, LoginInputAccessor
         }
     }
     
-    func passwordTextWillClear() {
-        
+    func didPressSignUp() {
+        let signUpController = SignUpController()
+        navigationController?.pushViewController(signUpController, animated: true)
+    }
+    
+    func didPressForgotPassword() {
+    let forgotPasswordController = ForgotPassword()
+    navigationController?.pushViewController(forgotPasswordController, animated: true)
     }
     
     func handleIncorrectPassword(username: String, _ password: String) {
@@ -110,17 +120,6 @@ class LoginController: UIViewController, UITextFieldDelegate, LoginInputAccessor
         present(alert, animated: true, completion: nil)
     }
     
-    
-    func didPressForgotPassword() {
-        let forgotPasswordController = ForgotPassword()
-        navigationController?.pushViewController(forgotPasswordController, animated: true)
-    }
-
-    func didPressSignUp() {
-        let signUpController = SignUpController()
-        navigationController?.pushViewController(signUpController, animated: true)
-    }
-    
     lazy var frame = view.frame
     lazy var loginView = LoginInputAccessoryView(frame: frame)
     
@@ -129,8 +128,6 @@ class LoginController: UIViewController, UITextFieldDelegate, LoginInputAccessor
         return loginView
     }()
     
-    
-    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -138,11 +135,9 @@ class LoginController: UIViewController, UITextFieldDelegate, LoginInputAccessor
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(handleAppDidBecomeActive), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(handleAppDidBecomeActive), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
 
-        NotificationCenter.default.addObserver(self, selector: #selector(handleAppDidBecomeActive), name: Notification.Name("SuccessfulLogin"), object: nil)
-
-//        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(endEditing)))
+//        NotificationCenter.default.addObserver(self, selector: #selector(handleAppDidBecomeActive), name: Notification.Name("SuccessfulLogin"), object: nil)
 
         view.isOpaque = true
         view.alpha = 1
@@ -151,79 +146,75 @@ class LoginController: UIViewController, UITextFieldDelegate, LoginInputAccessor
         view.addSubview(containerView)
         }
     
-//    @objc func endEditing(gesture: UITapGestureRecognizer) {
-//        handleEndEditing()
-//    }
-//
-//    fileprivate func handleEndEditing() {
-//        if emailTextField.isFirstResponder {
-//            emailTextField.endEditing(true)
-//        }
-//        if passwordTextField.isFirstResponder {
-//            passwordTextField.endEditing(true)
-//        }
-//        else {
-//            return
-//            //ToDo: Something else
-//        }
-//    }
-    // ToDo: Biometrics HERE <<<<<-----------
-    var userCancelled = false
-    @objc func handleAppDidBecomeActive(notification: NSNotification) {
-        handleBiometricCheck(completion: nil)
+    override func viewDidAppear(_ animated: Bool) {
+        handleBiometricCheck { (success) in
+            if success {
+                self.callBiometricAuth()
+            }
+            else {
+                return
+            }
+        }
     }
-    func handleBiometricCheck(completion: ((Bool) -> ())?) {
-        var success = false
+    
+    var userCancelled = false
+    
+    
+    lazy var handleBiometricCheckIsComplete = false
+    
+    func handleBiometricCheck(result: @escaping ((Bool) -> ())) {
+        
         let savedTogState = KeychainWrapper.standard.bool(forKey: "savedToggleState")
-        if keychainPassword != nil && savedTogState == true && userCancelled == false {
-            print("Call Touch ID")
-            success = true
-//            callBiometricAuth()
+        if keychainPassword != nil && savedTogState == true && userCancelled == false && handleBiometricCheckIsComplete == false {
+            handleBiometricCheckIsComplete = true
+            print("Call Biometrics")
+            result(true)
+            return
         }
         else {
-            success = false
+            print("Check FAIL; Do not call Biometrics")
+            result(false)
         }
-        completion?(success)
     }
     
-    
-    //---///--/-//TODO: Reimplement Biometrics ------///---//////////-------------------
-    
-//    func callBiometricAuth() {
-//        let myContext = LAContext()
-//        let myLocalizedReasonString = "Please Sign On."
-//        var authError: NSError?
-//
-//        if #available(iOS 8.0, *) {
-//            if myContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &authError) {
-//                myContext.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: myLocalizedReasonString, reply: { (success, err) in
-//                    if success {
-//                        DispatchQueue.main.async {
-//                            self.passwordTextField.text = self.keychainPassword
-//                            self.emailTextField.text = self.keychainUser
-//                            self.handleLogin()
-//                        }
-//                    } else {
-//                        print("There is an Auth error:", err ?? "")
-//                        self.userCancelled = true
-//                    }
-//                })
-//            } else {
-//                print("Can't Do Auth This Way", authError ?? "")
-//            }
-//        }
-//    }
-//
-//    fileprivate func handleBiometricError() {
-//        let alert = UIAlertController(title: "Error" , message: "Please try again.", preferredStyle: .alert)
-//        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-//
-//        alert.addAction(UIAlertAction(title: "Try Again", style: .default, handler: { (_) in
-//            self.callBiometricAuth()
-//        }))
-//        self.present(alert, animated: true, completion: nil)
-//    }
+    func callBiometricAuth() {
+        let myContext = LAContext()
+        let myLocalizedReasonString = "Please Sign On."
+        var authError: NSError?
 
+        if #available(iOS 8.0, *) {
+            if myContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &authError) {
+                myContext.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: myLocalizedReasonString, reply: { (success, err) in
+                    if success {
+                        guard let emailTextString = self.keychainUser else { return }
+                        guard let passwordTextString = self.keychainPassword else { return }
+                        DispatchQueue.main.async {
+                            self.loginView.emailTextField.text = emailTextString
+                            self.loginView.passwordTextField.text = passwordTextString
+                            self.didPressLogin(emailText: emailTextString, passwordText: passwordTextString)
+                            
+                        }
+                    } else {
+                        print("There is an Auth error:", err ?? "")
+                        self.userCancelled = true
+                    }
+                })
+            } else {
+                print("Can't Do Auth This Way", authError ?? "")
+            }
+        }
+        return
+    }
+
+    fileprivate func handleBiometricError() {
+        let alert = UIAlertController(title: "Error" , message: "Please try again.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+
+        alert.addAction(UIAlertAction(title: "Try Again", style: .default, handler: { (_) in
+            self.callBiometricAuth()
+        }))
+        self.present(alert, animated: true, completion: nil)
+    }
 }
 
 

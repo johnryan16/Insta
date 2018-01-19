@@ -19,6 +19,7 @@ class ForgotPassword: UIViewController {
         label.textColor = .white
         return label
     }()
+    
     let returnToLoginText: UIButton = {
         let button = UIButton()
         button.setTitle("Back To Log In", for: .normal)
@@ -27,10 +28,6 @@ class ForgotPassword: UIViewController {
         button.addTarget(self, action: #selector(handleReturnToLogin), for: .touchUpInside)
         return button
     }()
-    
-    @objc func handleReturnToLogin() {
-        navigationController?.popViewController(animated: true)
-    }
     
     let emailTextField: UITextField = {
         let tf = UITextField()
@@ -47,18 +44,6 @@ class ForgotPassword: UIViewController {
         return tf
     }()
     
-    @objc func handleTextInputChange() {
-        let validEmail = isValidEmail(email: emailTextField.text ?? "")
-        let isFormValid = emailTextField.text?.count ?? 0 > 0 && validEmail == true
-        
-        if isFormValid {
-            sendEmailButton.isEnabled = true
-            sendEmailButton.setTitleColor(.white, for: .normal)
-        } else {
-            sendEmailButton.isEnabled = false
-            sendEmailButton.setTitleColor(UIColor(white: 1.0, alpha: 0.55), for: .normal)
-        }
-    }
     let sendEmailButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Email Link to Reset", for: .normal)
@@ -73,6 +58,23 @@ class ForgotPassword: UIViewController {
         button.isEnabled = false
         return button
     }()
+    
+    @objc func handleReturnToLogin() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func handleTextInputChange() {
+        let validEmail = isValidEmail(email: emailTextField.text ?? "")
+        let isFormValid = emailTextField.text?.count ?? 0 > 0 && validEmail == true
+        
+        if isFormValid {
+            sendEmailButton.isEnabled = true
+            sendEmailButton.setTitleColor(.white, for: .normal)
+        } else {
+            sendEmailButton.isEnabled = false
+            sendEmailButton.setTitleColor(UIColor(white: 1.0, alpha: 0.55), for: .normal)
+        }
+    }
     
     @objc func handleReset() {
         guard let email = emailTextField.text else { return }

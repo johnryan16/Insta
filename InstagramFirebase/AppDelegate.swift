@@ -70,7 +70,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
 //        }
 //    }
     
-    
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         print("Registered for notifications:", deviceToken)
         handleFcmTokenStatus()
@@ -172,19 +171,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         
         // Happens on ANY Load
-        
-        
-        
     }
-    
-    
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         
         //Manual Close
     }
-
-
 }
 

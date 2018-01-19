@@ -11,8 +11,10 @@ import Firebase
 
 protocol LoginInputAccessoryViewDelegate {
     func didPressLogin(emailText: String, passwordText: String)
-//    func didPressForgotPassword()
-//    func didPressSignUp()
+    func handleBiometricCheck(result: @escaping ((Bool) -> ()))
+    func callBiometricAuth()
+    func didPressSignUp()
+    func didPressForgotPassword()
 }
 
 class LoginInputAccessoryView: UIView, UITextFieldDelegate, UINavigationControllerDelegate {
@@ -80,6 +82,43 @@ class LoginInputAccessoryView: UIView, UITextFieldDelegate, UINavigationControll
         return button
     }()
     
+    let userCallBiometricsButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Face ID!", for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        button.addTarget(self, action: #selector(handleUserRequestBiometrics), for: .touchUpInside)
+        return button
+    }()
+    
+    let forgotPasswordButton: UILabel = {
+        let questionText = UILabel()
+        questionText.text = "Forgot your password?"
+        questionText.font = UIFont.systemFont(ofSize: 14)
+        questionText.textColor = .darkGray
+        return questionText
+    }()
+    let resetPasswordButton: UIButton = {
+        let button = UIButton(type: .system)
+        let attributedTitle = NSMutableAttributedString(string: "Reset Password", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.rgb(red: 17, green: 154, blue: 237)])
+        button.setAttributedTitle(attributedTitle, for: .normal)
+        button.addTarget(self, action: #selector(handleForgotPassword), for: .touchUpInside)
+        return button
+    }()
+    
+    let dontHaveAccountButton: UIButton = {
+        let button = UIButton(type: .system)
+        let attributedTitle = NSMutableAttributedString(string: "Don't have an account?  ", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray])
+        
+        attributedTitle.append(NSAttributedString(string: "Sign Up", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.rgb(red: 17, green: 154, blue: 237)]))
+        button.setAttributedTitle(attributedTitle, for: .normal)
+        button.addTarget(self, action: #selector(handleShowSignUp), for: .touchUpInside)
+        return button
+    }()
+    
+    @objc func handleUserRequestBiometrics() {
+        delegate?.callBiometricAuth()
+    }
+    
     func isValidEmail(email: String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
         let emailTest = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
@@ -105,41 +144,15 @@ class LoginInputAccessoryView: UIView, UITextFieldDelegate, UINavigationControll
         delegate?.didPressLogin(emailText: email, passwordText: password)
     }
     
-    let forgotPasswordButton: UILabel = {
-        let questionText = UILabel()
-        questionText.text = "Forgot your password?"
-        questionText.font = UIFont.systemFont(ofSize: 14)
-        questionText.textColor = .darkGray
-        return questionText
-    }()
-    let resetPasswordButton: UIButton = {
-        let button = UIButton(type: .system)
-        let attributedTitle = NSMutableAttributedString(string: "Reset Password", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.rgb(red: 17, green: 154, blue: 237)])
-        button.setAttributedTitle(attributedTitle, for: .normal)
-        button.addTarget(self, action: #selector(handleForgotPassword), for: .touchUpInside)
-        return button
-    }()
-    
     @objc func handleForgotPassword() {
-//        delegate?.didPressForgotPassword()
-        
+        delegate?.didPressForgotPassword()
     }
-    
-    let dontHaveAccountButton: UIButton = {
-        let button = UIButton(type: .system)
-        let attributedTitle = NSMutableAttributedString(string: "Don't have an account?  ", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray])
-        
-        attributedTitle.append(NSAttributedString(string: "Sign Up", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.rgb(red: 17, green: 154, blue: 237)]))
-        button.setAttributedTitle(attributedTitle, for: .normal)
-        button.addTarget(self, action: #selector(handleShowSignUp), for: .touchUpInside)
-        return button
-    }()
     
     @objc func handleShowSignUp() {
-//        delegate?.didPressSignUp()
+        delegate?.didPressSignUp()
     }
 
-    @objc func endEditing(gesture: UITapGestureRecognizer) {
+    @objc func stopEditing() {
         handleEndEditing()
     }
     
@@ -156,22 +169,36 @@ class LoginInputAccessoryView: UIView, UITextFieldDelegate, UINavigationControll
         }
     }
     
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         
+        
+        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(stopEditing)))
+        
         isOpaque = true
         alpha = 1
         backgroundColor = .white
-        
-        
         
         addSubview(logoContainerView)
                 logoContainerView.anchor(top: topAnchor, left: safeAreaLayoutGuide.leftAnchor, bottom: nil, right: safeAreaLayoutGuide.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 150)
         
         setupInputFields()
         
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleLoginViewWillEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+        
+    }
+    
+    @objc func handleLoginViewWillEnterForeground() {
+        delegate?.handleBiometricCheck(result: { (successful) in
+            if successful {
+                self.delegate?.callBiometricAuth()
+            }
+            else {
+                print("Conditions not met. Do not call Biometrics.")
+            }
+        })
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -204,14 +231,17 @@ class LoginInputAccessoryView: UIView, UITextFieldDelegate, UINavigationControll
         addSubview(resetPasswordButton)
         resetPasswordButton.anchor(top: nil, left: forgotPasswordButton.rightAnchor, bottom: forgotPasswordButton.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 4, paddingBottom: -5, paddingRight: 0, width: 0, height: 0)
         
-//        addSubview(userCallBiometricsButton)
-//        userCallBiometricsButton.anchor(top: nil, left: stackView.centerXAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: -25, paddingBottom: 385, paddingRight: 0, width: 0, height: 0)
+        addSubview(userCallBiometricsButton)
+        userCallBiometricsButton.anchor(top: nil, left: stackView.centerXAnchor, bottom: safeAreaLayoutGuide.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: -25, paddingBottom: 385, paddingRight: 0, width: 0, height: 0)
+        
+        addSubview(dontHaveAccountButton)
+        dontHaveAccountButton.anchor(top: nil, left: nil, bottom: safeAreaLayoutGuide.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        dontHaveAccountButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor).isActive = true
         
         emailTextField.delegate = self
         passwordTextField.delegate = self
         
     }
-    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
