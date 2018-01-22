@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B0332092015521500108CC2 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1B0332082015521500108CC2 /* Settings.bundle */; };
 		1B1C4A481F5CC0AB00B60604 /* PhotoSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1C4A471F5CC0AB00B60604 /* PhotoSelectorController.swift */; };
 		1B2140061F63A07300453E08 /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2140051F63A07300453E08 /* HomeController.swift */; };
 		1B2140081F63A2F400453E08 /* HomePostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2140071F63A2F400453E08 /* HomePostCell.swift */; };
@@ -50,6 +51,7 @@
 
 /* Begin PBXFileReference section */
 		0CE05CAB5A656F936E33B35E /* Pods-InstagramFirebase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstagramFirebase.release.xcconfig"; path = "Pods/Target Support Files/Pods-InstagramFirebase/Pods-InstagramFirebase.release.xcconfig"; sourceTree = "<group>"; };
+		1B0332082015521500108CC2 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		1B1C4A471F5CC0AB00B60604 /* PhotoSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSelectorController.swift; sourceTree = "<group>"; };
 		1B2140051F63A07300453E08 /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
 		1B2140071F63A2F400453E08 /* HomePostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePostCell.swift; sourceTree = "<group>"; };
@@ -115,6 +117,33 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		1B03320A2015951300108CC2 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1B434BF62001C6220022D312 /* CommentInputAccessoryView.swift */,
+				1B434BF82001DE850022D312 /* CommentInputTextView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1B03320B2015953A00108CC2 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1BEA60AB1F71B58A001A6B25 /* CommentsController.swift */,
+				1B2140051F63A07300453E08 /* HomeController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		1B03320C2015956B00108CC2 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				1B2140071F63A2F400453E08 /* HomePostCell.swift */,
+				1BEA60AD1F71D488001A6B25 /* CommentCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		1B1C4A461F5CC08F00B60604 /* AddPhoto */ = {
 			isa = PBXGroup;
 			children = (
@@ -129,12 +158,9 @@
 		1B2140041F63A05E00453E08 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				1B434BF62001C6220022D312 /* CommentInputAccessoryView.swift */,
-				1BEA60AB1F71B58A001A6B25 /* CommentsController.swift */,
-				1B434BF82001DE850022D312 /* CommentInputTextView.swift */,
-				1B2140051F63A07300453E08 /* HomeController.swift */,
-				1B2140071F63A2F400453E08 /* HomePostCell.swift */,
-				1BEA60AD1F71D488001A6B25 /* CommentCell.swift */,
+				1B03320A2015951300108CC2 /* Views */,
+				1B03320B2015953A00108CC2 /* Controllers */,
+				1B03320C2015956B00108CC2 /* Cells */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -200,11 +226,11 @@
 			isa = PBXGroup;
 			children = (
 				1BFC3F711F797AB500F6726C /* InstagramFirebase.entitlements */,
+				1B65701F1F5E3EA900EC1ECD /* Models */,
 				1B95CB441F6A1DEB00F2CFE4 /* Camera */,
 				1B5623D11F65DC7600761562 /* Search */,
 				1BE9FBEC1F592EE8000F3B65 /* Login */,
 				1B2140041F63A05E00453E08 /* Home */,
-				1B65701F1F5E3EA900EC1ECD /* Models */,
 				1B1C4A461F5CC08F00B60604 /* AddPhoto */,
 				1BBFD1291FBF4B16002DD26B /* Device Settings */,
 				1BE9FBE91F58DDFD000F3B65 /* UserProfile */,
@@ -235,6 +261,7 @@
 			isa = PBXGroup;
 			children = (
 				1BBFD12A1FBF4B36002DD26B /* DeviceSettings.swift */,
+				1B0332082015521500108CC2 /* Settings.bundle */,
 			);
 			path = "Device Settings";
 			sourceTree = "<group>";
@@ -341,6 +368,7 @@
 			files = (
 				1BA17D981F58849200837AF1 /* LaunchScreen.storyboard in Resources */,
 				1BA17DA31F589E2D00837AF1 /* GoogleService-Info.plist in Resources */,
+				1B0332092015521500108CC2 /* Settings.bundle in Resources */,
 				1BA17D951F58849200837AF1 /* Assets.xcassets in Resources */,
 				1BA17D931F58849200837AF1 /* Main.storyboard in Resources */,
 			);

@@ -159,12 +159,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         
         //After selecting another app in multitasking window OR going home
+        let biometricsStatus = KeychainWrapper.standard.bool(forKey: "savedToggleState")
+        if biometricsStatus == false {
+            KeychainWrapper.standard.removeObject(forKey: "passwordSaved")
+            let testBioStatus = KeychainWrapper.standard.bool(forKey: "passwordSaved")
+            print("The saved password before termination is:", testBioStatus ?? "")
+        }
+        
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
         
-        //After selecting from multitak window or from home screen
+        //After selecting from multitask window or from home screen
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {

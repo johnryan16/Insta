@@ -161,7 +161,6 @@ class LoginController: UIViewController, UITextFieldDelegate, LoginInputAccessor
     
     var userCancelled = false
     
-    
     lazy var handleBiometricCheckIsComplete = false
     
     func handleBiometricCheck(result: @escaping ((Bool) -> ())) {

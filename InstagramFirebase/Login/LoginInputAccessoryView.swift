@@ -186,20 +186,20 @@ class LoginInputAccessoryView: UIView, UITextFieldDelegate, UINavigationControll
         setupInputFields()
         
         
-        NotificationCenter.default.addObserver(self, selector: #selector(handleLoginViewWillEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(handleLoginViewWillEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         
     }
     
-    @objc func handleLoginViewWillEnterForeground() {
-        delegate?.handleBiometricCheck(result: { (successful) in
-            if successful {
-                self.delegate?.callBiometricAuth()
-            }
-            else {
-                print("Conditions not met. Do not call Biometrics.")
-            }
-        })
-    }
+//    @objc func handleLoginViewWillEnterForeground() {
+//        delegate?.handleBiometricCheck(result: { (successful) in
+//            if successful {
+//                self.delegate?.callBiometricAuth()
+//            }
+//            else {
+//                print("Conditions not met. Do not call Biometrics.")
+//            }
+//        })
+//    }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         handleMakeInputsFirstResponders()
