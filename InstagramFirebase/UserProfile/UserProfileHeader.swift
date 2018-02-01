@@ -12,9 +12,11 @@ import Firebase
 protocol UserProfileHeaderDelegate {
     func didChangeToListView()
     func didChangeToGridView()
+    func didPressEditProfile()
+    
 }
 
-class UserProfileHeader: UICollectionViewCell {
+class UserProfileHeader: UICollectionViewCell, UINavigationControllerDelegate {
     
     var delegate: UserProfileHeaderDelegate?
     
@@ -32,13 +34,12 @@ class UserProfileHeader: UICollectionViewCell {
     
     fileprivate func setupEditFollowButton() {
         guard let currentLoggedInUserId = Auth.auth().currentUser?.uid else { return }
-        
         guard let userId = user?.uid else { return }
         
         if currentLoggedInUserId == userId {
-            //editprofile Logic execution
-        } else {
+            //ToDo: editprofile Logic execution
             
+        } else {
             //check if following
             Database.database().reference().child("following").child(currentLoggedInUserId).child(userId).observeSingleEvent(of: .value, with: { (snapshot) in
                 
@@ -54,15 +55,17 @@ class UserProfileHeader: UICollectionViewCell {
         }
     }
     
+    func handlePressEditProfile() {
+            
+    }
+    
     @objc func handleProfileOrFollow() {
         print("Execute edit profile or follow or unfollow logic HERE")
         
         guard let currentLoggedInUserId = Auth.auth().currentUser?.uid else { return }
-        
         guard let userId = user?.uid else { return }
         
         if editProfileFollowButton.titleLabel?.text == "Unfollow" {
-           
             Database.database().reference().child("following").child(currentLoggedInUserId).child(userId).removeValue(completionBlock: { (err, ref) in
                 if let err = err {
                     print("Failed to unfollow user:", err)
@@ -73,7 +76,11 @@ class UserProfileHeader: UICollectionViewCell {
                 self.setupFollowStyle()
             })
             
-        } else {
+        } else if editProfileFollowButton.titleLabel?.text == "Edit Profile" {
+            delegate?.didPressEditProfile()
+        }
+        
+        else {
             //FOLLOW logic
             let ref = Database.database().reference().child("following").child(currentLoggedInUserId)
             

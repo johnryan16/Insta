@@ -72,9 +72,7 @@ class LoginController: UIViewController, UITextFieldDelegate, LoginInputAccessor
             self.dismiss(animated: true, completion: nil)
         }
     }
-    
-    //Completed separation of LoginView from LoginController. Also implemented CallBio on LoginView presentation and/or user request.
-    
+        
     func didPressSignUp() {
         let signUpController = SignUpController()
         navigationController?.pushViewController(signUpController, animated: true)

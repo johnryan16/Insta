@@ -13,6 +13,8 @@ import UserNotifications
 
 class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
     
+    
+    
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         
         let index = viewControllers?.index(of: viewController)
@@ -33,8 +35,6 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         super.viewDidLoad()
         self.delegate = self
         
-        
-        
         NotificationCenter.default.addObserver(self, selector: #selector(handleViewWillEnterForeground), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
         
         if Auth.auth().currentUser == nil {
@@ -46,8 +46,10 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
                 self.present(navController, animated: true, completion: nil)
             }
         }
+        else {
+            setupViewControllers()
+        }
         
-        setupViewControllers()
     }
     
     @objc func handleViewWillEnterForeground(notification: NSNotification) {
@@ -94,14 +96,12 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         let searchNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "search_unselected"), selectedImage: #imageLiteral(resourceName: "search_selected"), rootViewController: UserSearchController(collectionViewLayout: UICollectionViewFlowLayout()))
         
         let plusNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "plus_unselected"), selectedImage: #imageLiteral(resourceName: "plus_unselected"))
-        
         let likeNavController = templateNavController(unselectedImage: #imageLiteral(resourceName: "like_unselected"), selectedImage: #imageLiteral(resourceName: "like_selected"))
         
-        //user profile setup here
+        //user profile here
         let layout = UICollectionViewFlowLayout()
         let userProfileController = UserProfileController(collectionViewLayout: layout)
         let userProfileNavController = UINavigationController(rootViewController: userProfileController)
-        
         userProfileNavController.tabBarItem.image = #imageLiteral(resourceName: "profile_unselected")
         userProfileNavController.tabBarItem.selectedImage = #imageLiteral(resourceName: "profile_selected")
         
@@ -120,6 +120,8 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         for item in items {
             item.imageInsets = UIEdgeInsets(top: 6, left: 0, bottom: -6, right: 0)
         }
+        selectedViewController = userProfileNavController
+        
     }
     
     fileprivate func templateNavController(unselectedImage: UIImage, selectedImage: UIImage, rootViewController: UIViewController = UIViewController()) -> UINavigationController {

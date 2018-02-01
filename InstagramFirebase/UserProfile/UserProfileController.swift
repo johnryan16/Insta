@@ -18,6 +18,12 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     
     var isGridView = true
     
+    func didPressEditProfile() {
+        let testInstance = UserProfileEditor()
+        let navController = UINavigationController(rootViewController: testInstance)
+        present(navController, animated: true, completion: nil)
+    }
+    
     func didChangeToGridView() {
         isGridView = true
         collectionView?.reloadData()

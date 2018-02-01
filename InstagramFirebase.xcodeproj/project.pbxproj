@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1B0332092015521500108CC2 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 1B0332082015521500108CC2 /* Settings.bundle */; };
+		1B03320E2015977700108CC2 /* UserProfileEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B03320D2015977700108CC2 /* UserProfileEditor.swift */; };
+		1B033211201D5F5C00108CC2 /* UserProfileInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B033210201D5F5C00108CC2 /* UserProfileInfoCell.swift */; };
 		1B1C4A481F5CC0AB00B60604 /* PhotoSelectorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1C4A471F5CC0AB00B60604 /* PhotoSelectorController.swift */; };
 		1B2140061F63A07300453E08 /* HomeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2140051F63A07300453E08 /* HomeController.swift */; };
 		1B2140081F63A2F400453E08 /* HomePostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B2140071F63A2F400453E08 /* HomePostCell.swift */; };
@@ -52,6 +54,8 @@
 /* Begin PBXFileReference section */
 		0CE05CAB5A656F936E33B35E /* Pods-InstagramFirebase.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstagramFirebase.release.xcconfig"; path = "Pods/Target Support Files/Pods-InstagramFirebase/Pods-InstagramFirebase.release.xcconfig"; sourceTree = "<group>"; };
 		1B0332082015521500108CC2 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		1B03320D2015977700108CC2 /* UserProfileEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileEditor.swift; sourceTree = "<group>"; };
+		1B033210201D5F5C00108CC2 /* UserProfileInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileInfoCell.swift; sourceTree = "<group>"; };
 		1B1C4A471F5CC0AB00B60604 /* PhotoSelectorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSelectorController.swift; sourceTree = "<group>"; };
 		1B2140051F63A07300453E08 /* HomeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeController.swift; sourceTree = "<group>"; };
 		1B2140071F63A2F400453E08 /* HomePostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePostCell.swift; sourceTree = "<group>"; };
@@ -140,6 +144,14 @@
 			children = (
 				1B2140071F63A2F400453E08 /* HomePostCell.swift */,
 				1BEA60AD1F71D488001A6B25 /* CommentCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		1B03320F201D5F4100108CC2 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				1B033210201D5F5C00108CC2 /* UserProfileInfoCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -249,10 +261,10 @@
 		1BA17D9F1F58909C00837AF1 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				1B640FBA1FBE2868005B2751 /* KeychainWrapper */,
 				1BA17DA01F5890B600837AF1 /* Extensions.swift */,
 				1B6570241F5E4BC400EC1ECD /* CustomImageView.swift */,
 				1B5623CF1F65DAA600761562 /* FirebaseUtils.swift */,
-				1B640FBA1FBE2868005B2751 /* KeychainWrapper */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -272,6 +284,8 @@
 				1BE9FBE71F58CFA8000F3B65 /* UserProfileController.swift */,
 				1BE9FBEA1F58DE11000F3B65 /* UserProfileHeader.swift */,
 				1B6570221F5E416900EC1ECD /* UserProfilePhotoCell.swift */,
+				1B03320D2015977700108CC2 /* UserProfileEditor.swift */,
+				1B03320F201D5F4100108CC2 /* Cells */,
 			);
 			path = UserProfile;
 			sourceTree = "<group>";
@@ -326,7 +340,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0900;
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0930;
 				ORGANIZATIONNAME = "John Ryan";
 				TargetAttributes = {
 					1BA17D891F58849200837AF1 = {
@@ -443,6 +457,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B03320E2015977700108CC2 /* UserProfileEditor.swift in Sources */,
 				1B640FB91FBE282B005B2751 /* KeychainItemAccessibility.swift in Sources */,
 				1B5623D51F65E10800761562 /* UserSearchCell.swift in Sources */,
 				1BDE01FF20071B7700207D11 /* LoginInputAccessoryView.swift in Sources */,
@@ -450,6 +465,7 @@
 				1B65701E1F5DFCA600EC1ECD /* SharePhotoController.swift in Sources */,
 				1B434BF72001C6220022D312 /* CommentInputAccessoryView.swift in Sources */,
 				1BA17D901F58849200837AF1 /* SignUpController.swift in Sources */,
+				1B033211201D5F5C00108CC2 /* UserProfileInfoCell.swift in Sources */,
 				1B3DE00F1F5DC4A2007E3CD9 /* PhotoSelectorCell.swift in Sources */,
 				1B6570251F5E4BC500EC1ECD /* CustomImageView.swift in Sources */,
 				1BEA60A81F71AC35001A6B25 /* CustomAnimationPresenter.swift in Sources */,
@@ -516,6 +532,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -523,6 +540,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -573,6 +591,7 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -580,6 +599,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -614,6 +634,7 @@
 			baseConfigurationReference = 7C0E476EFF00428142220FC5 /* Pods-InstagramFirebase.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = InstagramFirebase/InstagramFirebase.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -634,6 +655,7 @@
 			baseConfigurationReference = 0CE05CAB5A656F936E33B35E /* Pods-InstagramFirebase.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_ENTITLEMENTS = InstagramFirebase/InstagramFirebase.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;

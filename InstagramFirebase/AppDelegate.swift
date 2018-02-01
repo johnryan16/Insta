@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
             handleLogout()
             
             userDefaults.set(true, forKey: "hasRunBefore")
-            userDefaults.synchronize()
+//            userDefaults.synchronize()
         }
         window = UIWindow()
         window?.rootViewController = MainTabBarController()
@@ -97,7 +97,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
             //Access main UI from Appdelegate
             if let mainTabBarController = window?.rootViewController as? MainTabBarController {
                 
-                mainTabBarController.selectedIndex = 0
+                mainTabBarController.selectedIndex = 4
                 mainTabBarController.presentedViewController?.dismiss(animated: true, completion: nil)
                 
                 if let homeNavigationController = mainTabBarController.viewControllers?.first as? UINavigationController {
