@@ -16,16 +16,18 @@ class UserProfileInfoCell: UITableViewCell {
         let name = UITextView()
         name.text = "Name"
         name.font = UIFont.systemFont(ofSize: 18)
+        name.backgroundColor = .clear
+        name.translatesAutoresizingMaskIntoConstraints = false
         return name
     }()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: .value2, reuseIdentifier: nil)
         
-//        backgroundColor = .red
+        backgroundColor = .magenta
         
         addSubview(nameText)
-        nameText.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 10, paddingBottom: 20, paddingRight: 0, width: 75, height: 75)
+        nameText.anchor(top: nil, left: leftAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 10, paddingBottom: 0, paddingRight: 0, width: 75, height: 50)
         
         
     }

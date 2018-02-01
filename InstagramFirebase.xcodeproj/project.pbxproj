@@ -148,12 +148,13 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
-		1B03320F201D5F4100108CC2 /* Cells */ = {
+		1B03320F201D5F4100108CC2 /* Editor */ = {
 			isa = PBXGroup;
 			children = (
+				1B03320D2015977700108CC2 /* UserProfileEditor.swift */,
 				1B033210201D5F5C00108CC2 /* UserProfileInfoCell.swift */,
 			);
-			path = Cells;
+			path = Editor;
 			sourceTree = "<group>";
 		};
 		1B1C4A461F5CC08F00B60604 /* AddPhoto */ = {
@@ -284,8 +285,7 @@
 				1BE9FBE71F58CFA8000F3B65 /* UserProfileController.swift */,
 				1BE9FBEA1F58DE11000F3B65 /* UserProfileHeader.swift */,
 				1B6570221F5E416900EC1ECD /* UserProfilePhotoCell.swift */,
-				1B03320D2015977700108CC2 /* UserProfileEditor.swift */,
-				1B03320F201D5F4100108CC2 /* Cells */,
+				1B03320F201D5F4100108CC2 /* Editor */,
 			);
 			path = UserProfile;
 			sourceTree = "<group>";

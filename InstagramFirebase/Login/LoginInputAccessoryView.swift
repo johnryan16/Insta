@@ -116,7 +116,14 @@ class LoginInputAccessoryView: UIView, UITextFieldDelegate, UINavigationControll
     }()
     
     @objc func handleUserRequestBiometrics() {
-        delegate?.callBiometricAuth()
+        delegate?.handleBiometricCheck(result: { (success) in
+            if success {
+                self.delegate?.callBiometricAuth()
+            }
+            else {
+                return
+            }
+        })
     }
     
     func isValidEmail(email: String) -> Bool {
@@ -232,7 +239,7 @@ class LoginInputAccessoryView: UIView, UITextFieldDelegate, UINavigationControll
         resetPasswordButton.anchor(top: nil, left: forgotPasswordButton.rightAnchor, bottom: forgotPasswordButton.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 4, paddingBottom: -5, paddingRight: 0, width: 0, height: 0)
         
         addSubview(userCallBiometricsButton)
-        userCallBiometricsButton.anchor(top: nil, left: stackView.centerXAnchor, bottom: safeAreaLayoutGuide.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: -25, paddingBottom: 385, paddingRight: 0, width: 0, height: 0)
+        userCallBiometricsButton.anchor(top: forgotPasswordButton.bottomAnchor, left: stackView.centerXAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: -25, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
         addSubview(dontHaveAccountButton)
         dontHaveAccountButton.anchor(top: nil, left: nil, bottom: safeAreaLayoutGuide.bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)

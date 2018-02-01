@@ -20,25 +20,6 @@ class LoginController: UIViewController, UITextFieldDelegate, LoginInputAccessor
     var keychainUser: String? = KeychainWrapper.standard.string(forKey: "emailSaved")
     
     
-    let userCallBiometricsButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Face ID!", for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.addTarget(self, action: #selector(handleUserRequestBiometrics), for: .touchUpInside)
-        return button
-    }()
-    
-    @objc func handleUserRequestBiometrics() {
-        handleBiometricCheck { (success) in
-            if success {
-                self.callBiometricAuth()
-            }
-            else {
-                return
-            }
-        }
-    }
-    
     func handleBiometicsUnavailable() {
         let alert = UIAlertController(title: "Face ID Not Available" , message: "Please use your password to login.", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
@@ -157,11 +138,25 @@ class LoginController: UIViewController, UITextFieldDelegate, LoginInputAccessor
         }
     }
     
+    
+    
     var userCancelled = false
     
     lazy var handleBiometricCheckIsComplete = false
     
     func handleBiometricCheck(result: @escaping ((Bool) -> ())) {
+        
+        enum BiometricCheckError {
+            case passwordNil
+            case toggleStateIsFalse
+            case userDidCancel
+            case biometricCheckIsIncomplete
+            case noError
+        }
+        
+//        var checkError = BiometricCheckError.noError
+        
+        
         
         let savedTogState = KeychainWrapper.standard.bool(forKey: "savedToggleState")
         if keychainPassword != nil && savedTogState == true && userCancelled == false && handleBiometricCheckIsComplete == false {
@@ -170,6 +165,9 @@ class LoginController: UIViewController, UITextFieldDelegate, LoginInputAccessor
             result(true)
             return
         }
+        
+            
+            
         else {
             print("Check FAIL; Do not call Biometrics")
             result(false)

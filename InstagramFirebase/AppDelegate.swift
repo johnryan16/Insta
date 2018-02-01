@@ -70,14 +70,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
 //        }
 //    }
     
-    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        print("Registered for notifications:", deviceToken)
-        handleFcmTokenStatus()
-    }
-    
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
-        print("Registered with FCM with token:", fcmToken)
-    }
+//    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+//        print("Registered for notifications:", deviceToken)
+//        handleFcmTokenStatus()
+//    }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler(.alert)
@@ -128,23 +124,63 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
         myApplication.registerForRemoteNotifications()
     }
     
-    func handleFcmTokenStatus() {
+//    func handleFcmTokenStatus() {
+//        guard let fcmToken = Messaging.messaging().fcmToken else { return }
+//        guard let uid = Auth.auth().currentUser?.uid else { return }
+//        let checkLocation = Database.database().reference().child("users").child(uid).child("fcmToken")
+//        checkLocation.observeSingleEvent(of: .value) { (snapshot) in
+//            let value = snapshot.value as? String
+//            if value == nil {
+//                let values = ["fcmToken": fcmToken]
+//                Database.database().reference().child("users").child(uid).updateChildValues(values, withCompletionBlock: { (err, ref) in
+//                    if let err = err {
+//                        print("Failed to save user info to F-DB:", err)
+//                        return
+//                    }
+//                    print("Successfully Saved user to DB")
+//                })
+//            }
+//        }
+//    }
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        print("Registered with FCM with token:", fcmToken)
+        
         guard let uid = Auth.auth().currentUser?.uid else { return }
         let checkLocation = Database.database().reference().child("users").child(uid).child("fcmToken")
+        
+        
         checkLocation.observeSingleEvent(of: .value) { (snapshot) in
             let value = snapshot.value as? String
-            if value == nil {
-                guard let fcmToken = Messaging.messaging().fcmToken else { return }
+            if value == nil  {
                 let values = ["fcmToken": fcmToken]
                 Database.database().reference().child("users").child(uid).updateChildValues(values, withCompletionBlock: { (err, ref) in
                     if let err = err {
                         print("Failed to save user info to F-DB:", err)
                         return
                     }
-                    print("Successfully Saved user to DB")
+                    print("Successfully Saved user to DB due for first time.")
                 })
             }
+            else if value != fcmToken {
+                let values = ["fcmToken": fcmToken]
+                Database.database().reference().child("users").child(uid).updateChildValues(values, withCompletionBlock: { (err, ref) in
+                    if let err = err {
+                        print("Failed to save user info to F-DB:", err)
+                        return
+                    }
+                    print("Successfully Saved user to DB due to nonmatch")
+                })
+            }
+            else {
+                print("No change made to fcmToken in Database.")
+            }
         }
+        
+        
+        
+        
+        
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
