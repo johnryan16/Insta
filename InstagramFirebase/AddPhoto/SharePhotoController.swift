@@ -67,7 +67,8 @@ class SharePhotoController: UIViewController {
                 self.navigationItem.rightBarButtonItem?.isEnabled = false
                 print("Failed to upload post image", err)
             }
-            guard let imageUrl = metadata?.downloadURL()?.absoluteString else { return }
+//            guard let imageUrl = metadata?.downloadURL()?.absoluteString else { return }
+            guard let imageUrl = metadata?.path else { return }
             
             print("Successfully Uploaded image to", imageUrl)
             self.saveToDatabaseWithImageUrl(imageUrl: imageUrl)

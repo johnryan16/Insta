@@ -101,63 +101,65 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
         
         return button
     }()
-    
+
     @objc func handleSignUp() {
         guard let email = emailTextField.text, email.count > 0 else { return }
         guard let password = passwordTextField.text, password.count > 0 else { return }
         guard let username = usernameTextField.text, username.count > 0 else { return }
-        
+        //TODO: rename user for something related to result
         Auth.auth().createUser(withEmail: email, password: password) { (user, error) in
             if let err = error {
                 print("Failed to create user", err)
                 return
             }
-            print("Successfully created User", user?.uid ?? "")
-            
+            print("Successfully created User", user?.user.uid ?? "")
             guard let image = self.plusPhotoButton.imageView?.image else { return }
-            
             guard let uploadDate = UIImageJPEGRepresentation(image, 0.3) else { return }
-            
             let filename = NSUUID().uuidString
-            Storage.storage().reference().child("profile_images").child(filename).putData(uploadDate, metadata: nil, completion: { (metadata, err) in
+           
+            Storage.storage().reference().child("profile_images").child(filename).putData(uploadDate, metadata: nil, completion: { (metadata, nil) in
                 
-                if let err = err {
-                    print("Failed to upload profile image:", err)
-                    return
-                }
-                guard let profileImageUrl = metadata?.downloadURL()?.absoluteString else { return }
-                
-                print("Successfully uploaded profile image:", profileImageUrl)
-                
-                guard let uid = user?.uid else { return }
-                
-                guard let fcmToken = Messaging.messaging().fcmToken else { return }
-                
-                let dictionaryValues = ["username": username, "profileImageUrl": profileImageUrl, "fcmToken": fcmToken]
-                let values = [uid: dictionaryValues]
-                
-                Database.database().reference().child("users").updateChildValues(values, withCompletionBlock: { (err, ref) in
+                Storage.storage().reference().child("profile_images").child(filename).downloadURL(completion: { (url, err) in
+                    
                     if let err = err {
-                        print("Failed to save user info to F-DB:", err)
+                        print("Failed to upload profile image:", err)
                         return
                     }
-                    print("Successfully Saved user to DB")
-                    guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { return }
+                    print("Url is ", url ?? "")
                     
-//                    Auth.auth().currentUser?.sendEmailVerification(completion: { (err) in
-//                        if let err = err {
-//                            print("Failed to Send Verification Email", err)
-//                        }
-//                        print("Successfully send verification email")
-//                    })
+                    guard let profileImageUrl = url?.absoluteString else { return }
+                    print("Successfully uploaded profile image:", profileImageUrl)
                     
-                    mainTabBarController.setupViewControllers()
-                    self.dismiss(animated: true, completion: nil)
+                    guard let uid = user?.user.uid else { return }
+                    guard let fcmToken = Messaging.messaging().fcmToken else { return }
+                    let dictionaryValues = ["username": username, "profileImageUrl": profileImageUrl, "fcmToken": fcmToken]
+                    let values = [uid: dictionaryValues]
+                    
+                    Database.database().reference().child("users").updateChildValues(values, withCompletionBlock: { (err, ref) in
+                        if let err = err {
+                            print("Failed to save user info to F-DB:", err)
+                            return
+                        }
+                        print("Successfully Saved user to DB")
+                        
+                        guard let mainTabBarController = UIApplication.shared.keyWindow?.rootViewController as? MainTabBarController else { return }
+                        mainTabBarController.setupViewControllers()
+                        self.dismiss(animated: true, completion: nil)
+                    })
                 })
             })
         }
     }
 
+    //TODO: Implement Email Verification Properly
+    //                        Auth.auth().currentUser?.sendEmailVerification(completion: { (err) in
+    //                            if let err = err {
+    //                                print("Failed to Send Verification Email", err)
+    //                            }
+    //                            print("Successfully send verification email")
+    //                        })
+    
+    
     let alreadyHaveAccountButton: UIButton = {
     let button = UIButton(type: .system)
     let attributedTitle = NSMutableAttributedString(string: "Already have an account?  ", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray])

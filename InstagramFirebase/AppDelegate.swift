@@ -86,7 +86,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
         if let followerId = userInfo["followerId"] as? String {
             print(followerId)
             
-            //Push user profile controller for folloerID HERE
+            // ToDo: Push user profile controller for folloerID HERE
             let userProfileController = UserProfileController(collectionViewLayout: UICollectionViewFlowLayout())
             userProfileController.userId = followerId
             
@@ -173,7 +173,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
                 })
             }
             else {
-                print("No change made to fcmToken in Database.")
+                print("No change made to fcmToken in Database because they were not needed.")
             }
         }
         

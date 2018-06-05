@@ -7,10 +7,25 @@
 //
 
 import UIKit
+import Firebase
 
 class UserProfileEditor: UITableViewController, UINavigationControllerDelegate {
     
+    
+    var userId: String?
     let userInfoCellId = "UserInfoCell"
+    
+    let nameCell: UserProfileInfoCell = {
+        let test = UserProfileInfoCell()
+        test.labelText.text = "test"
+        return test
+    }()
+    
+    let usernameCell: UserProfileInfoCell = {
+        let test = UserProfileInfoCell()
+        test.labelText.text = "test"
+        return test
+    }()
     
     override func viewDidLoad() {
 //        tableView.backgroundColor = .red
@@ -18,7 +33,9 @@ class UserProfileEditor: UITableViewController, UINavigationControllerDelegate {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(handleDone))
         
         tableView.register(UserProfileInfoCell.self, forCellReuseIdentifier: userInfoCellId)
-        tableView.separatorColor = .purple
+        
+        
+        
         
         self.tableView.tableFooterView = UIView()
         
@@ -35,7 +52,7 @@ class UserProfileEditor: UITableViewController, UINavigationControllerDelegate {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return 2
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -49,5 +66,28 @@ class UserProfileEditor: UITableViewController, UINavigationControllerDelegate {
     @objc func handleDone() {
         print("Handle Done... which will save any changes... which will be fun implementing.")
     }
+    var user: User?
+    
+    fileprivate func fetchUser() {
+        
+        let uid = userId ?? (Auth.auth().currentUser?.uid ?? "")
+        
+        
+        Database.fetchUserWithUID(uid: uid) { (user) in
+            self.user = user
+            self.navigationItem.title = self.user?.username
+            
+//            self.collectionView?.reloadData()
+//            self.paginatePosts()
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     
 }

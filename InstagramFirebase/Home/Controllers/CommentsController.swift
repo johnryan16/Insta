@@ -55,6 +55,11 @@ class CommentsController: UICollectionViewController, UICollectionViewDelegateFl
         }
     }
     
+    var user: User?
+    fileprivate func fetchUserFields() {
+        
+    }
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return comments.count
     }

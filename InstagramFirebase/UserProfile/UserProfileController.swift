@@ -19,8 +19,11 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     var isGridView = true
     
     func didPressEditProfile() {
-        let testInstance = UserProfileEditor()
+        let layout = UICollectionViewFlowLayout()
+        let testInstance = UserEditor(collectionViewLayout: layout)
+        
         let navController = UINavigationController(rootViewController: testInstance)
+        
         present(navController, animated: true, completion: nil)
     }
     

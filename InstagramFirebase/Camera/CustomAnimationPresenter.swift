@@ -20,7 +20,6 @@ class CustomAnimationPresenter: NSObject, UIViewControllerAnimatedTransitioning 
         guard let fromView = transitionContext.view(forKey: .from) else { return }
         guard let toView = transitionContext.view(forKey: .to) else { return }
         
-        
         containerView.addSubview(toView)
         
         let startingFrame = CGRect(x: -toView.frame.width, y: 0, width: toView.frame.width, height: toView.frame.height)
