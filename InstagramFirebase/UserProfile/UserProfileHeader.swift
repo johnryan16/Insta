@@ -45,7 +45,7 @@ class UserProfileHeader: UICollectionViewCell, UINavigationControllerDelegate {
                 
                 if let isFollowing = snapshot.value as? Int, isFollowing == 1 {
                     
-                    self.editProfileFollowButton.setTitle("Unfollow", for: .normal)
+                    self.editProfileFollowButton.setTitle("Unfollow", for: UIControl.State.normal)
                 } else {
                     self.setupFollowStyle()
                 }
@@ -92,17 +92,17 @@ class UserProfileHeader: UICollectionViewCell, UINavigationControllerDelegate {
                 }
                 print("Successfully followed user: ", self.user?.username ?? "")
                 
-                self.editProfileFollowButton.setTitle("Unfollow", for: .normal)
+                self.editProfileFollowButton.setTitle("Unfollow", for: UIControl.State.normal)
                 self.editProfileFollowButton.backgroundColor = .white
-                self.editProfileFollowButton.setTitleColor(.black, for: .normal)
+                self.editProfileFollowButton.setTitleColor(.black, for: UIControl.State.normal)
             }
         }
     }
     
     fileprivate func setupFollowStyle() {
-        self.editProfileFollowButton.setTitle("Follow", for: .normal)
+        self.editProfileFollowButton.setTitle("Follow", for: UIControl.State.normal)
         self.editProfileFollowButton.backgroundColor = UIColor.rgb(red: 17, green: 154, blue: 237)
-        self.editProfileFollowButton.setTitleColor(.white, for: .normal)
+        self.editProfileFollowButton.setTitleColor(.white, for: UIControl.State.normal)
         self.editProfileFollowButton.layer.borderColor = UIColor(white: 0, alpha: 0.2).cgColor
     }
     
@@ -115,8 +115,8 @@ class UserProfileHeader: UICollectionViewCell, UINavigationControllerDelegate {
     
     lazy var gridButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "grid"), for: .normal)
-        button.addTarget(self, action: #selector(handleChangeToGridView), for: .touchUpInside)
+        button.setImage(#imageLiteral(resourceName: "grid"), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(handleChangeToGridView), for: UIControl.Event.touchUpInside)
         return button
     }()
     
@@ -129,9 +129,9 @@ class UserProfileHeader: UICollectionViewCell, UINavigationControllerDelegate {
     
     lazy var listButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "list"), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "list"), for: UIControl.State.normal)
         button.tintColor = UIColor(white: 0, alpha: 0.2)
-        button.addTarget(self, action: #selector(handleChangeToListView), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleChangeToListView), for: UIControl.Event.touchUpInside)
         return button
     }()
     
@@ -147,7 +147,7 @@ class UserProfileHeader: UICollectionViewCell, UINavigationControllerDelegate {
         let button = UIButton(type: .system)
         button.frame = CGRect(x: 0, y: 0, width: 2, height: 2)
         button.imageView?.contentMode = .scaleAspectFit
-        button.setImage(#imageLiteral(resourceName: "ribbon"), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "ribbon"), for: UIControl.State.normal)
         return button
     }()
     
@@ -161,9 +161,9 @@ class UserProfileHeader: UICollectionViewCell, UINavigationControllerDelegate {
     let postsLabel: UILabel = {
         let label = UILabel()
         
-        let attributedText = NSMutableAttributedString(string: "0\n", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14)])
+        let attributedText = NSMutableAttributedString(string: "0\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
         
-        attributedText.append(NSAttributedString(string: "posts", attributes: [NSAttributedStringKey.foregroundColor: UIColor.lightGray, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14)]))
+        attributedText.append(NSAttributedString(string: "posts", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
         
         label.attributedText = attributedText
         
@@ -176,9 +176,9 @@ class UserProfileHeader: UICollectionViewCell, UINavigationControllerDelegate {
     let followersLabel: UILabel = {
         let label = UILabel()
 
-        let attributedText = NSMutableAttributedString(string: "0\n", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14)])
+        let attributedText = NSMutableAttributedString(string: "0\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
         
-        attributedText.append(NSAttributedString(string: "followers", attributes: [NSAttributedStringKey.foregroundColor: UIColor.lightGray, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14)]))
+        attributedText.append(NSAttributedString(string: "followers", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
         
         label.attributedText = attributedText
         
@@ -190,9 +190,9 @@ class UserProfileHeader: UICollectionViewCell, UINavigationControllerDelegate {
     let followingLabel: UILabel = {
         let label = UILabel()
 
-        let attributedText = NSMutableAttributedString(string: "0\n", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14)])
+        let attributedText = NSMutableAttributedString(string: "0\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
         
-        attributedText.append(NSAttributedString(string: "following", attributes: [NSAttributedStringKey.foregroundColor: UIColor.lightGray, NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14)]))
+        attributedText.append(NSAttributedString(string: "following", attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray, NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
         
         label.attributedText = attributedText
         
@@ -203,13 +203,13 @@ class UserProfileHeader: UICollectionViewCell, UINavigationControllerDelegate {
     
     lazy var editProfileFollowButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Edit Profile", for: .normal)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitle("Edit Profile", for: UIControl.State.normal)
+        button.setTitleColor(.black, for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.layer.borderColor = UIColor.lightGray.cgColor
         button.layer.borderWidth = 1
         button.layer.cornerRadius = 3
-        button.addTarget(self, action: #selector(handleProfileOrFollow), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleProfileOrFollow), for: UIControl.Event.touchUpInside)
         return button
     }()
     

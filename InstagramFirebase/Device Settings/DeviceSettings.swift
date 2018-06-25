@@ -10,20 +10,18 @@ import Foundation
 import UIKit
 import LocalAuthentication
 import UserNotifications
+import Firebase
 
 class DeviceSettings: UIViewController {
     
     var currentToggleState: Bool?
-    
     let myContext = LAContext()
-    
     var authError: NSError?
-    
     let myLocalizedReason = "Enabling Bios"
     
     let touchSwitch: UISwitch = {
     let toggle = UISwitch()
-    toggle.addTarget(self, action: #selector(switchDidChange), for: .valueChanged)
+    toggle.addTarget(self, action: #selector(switchDidChange), for: UIControl.Event.valueChanged)
     return toggle
     }()
 
@@ -67,8 +65,6 @@ class DeviceSettings: UIViewController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        
-        
         if canAuthenticateOnViewAppear {
             canAuthenticate = true
         }
@@ -106,8 +102,15 @@ class DeviceSettings: UIViewController {
         if toState == true {
             self.touchSwitch.isOn = true
             self.currentToggleState = true
+            analyticsTest()
             handleKeychainUpdates()
         }
+    }
+    
+    func analyticsTest() {
+        guard let currentUser = Auth.auth().currentUser?.uid else { return }
+        Analytics.logEvent("using_Biometrics", parameters: ["user" : currentUser])
+        print("Update analytics")
     }
     
     @objc func handleBack() {

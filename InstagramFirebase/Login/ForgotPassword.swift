@@ -22,16 +22,16 @@ class ForgotPassword: UIViewController {
     
     let returnToLoginText: UIButton = {
         let button = UIButton()
-        button.setTitle("Back To Log In", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitle("Back To Log In", for: UIControl.State.normal)
+        button.setTitleColor(.white, for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        button.addTarget(self, action: #selector(handleReturnToLogin), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleReturnToLogin), for: UIControl.Event.touchUpInside)
         return button
     }()
     
     let emailTextField: UITextField = {
         let tf = UITextField()
-        let attributedPlaceholder = NSAttributedString(string: "Email", attributes: [NSAttributedStringKey.foregroundColor: UIColor(white: 1.0, alpha: 1.0)])
+        let attributedPlaceholder = NSAttributedString(string: "Email", attributes: [NSAttributedString.Key.foregroundColor: UIColor(white: 1.0, alpha: 1.0)])
         tf.attributedPlaceholder = attributedPlaceholder
         tf.keyboardType = UIKeyboardType.emailAddress
         tf.autocapitalizationType = UITextAutocapitalizationType.none
@@ -40,21 +40,21 @@ class ForgotPassword: UIViewController {
         tf.borderStyle = .roundedRect
         tf.font = UIFont.systemFont(ofSize: 16)
         tf.textColor = .white
-        tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
+        tf.addTarget(self, action: #selector(handleTextInputChange), for: UIControl.Event.editingChanged)
         return tf
     }()
     
     let sendEmailButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Email Link to Reset", for: .normal)
+        button.setTitle("Email Link to Reset", for: UIControl.State.normal)
         button.backgroundColor = UIColor.clear
         button.layer.cornerRadius = 5
         let whiteBorderColor = UIColor.white
         button.layer.borderColor = whiteBorderColor.cgColor
         button.layer.borderWidth = 1.0
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        button.setTitleColor(UIColor(white: 1.0, alpha: 0.55), for: .normal)
-        button.addTarget(self, action: #selector(handleReset), for: .touchUpInside)
+        button.setTitleColor(UIColor(white: 1.0, alpha: 0.55), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(handleReset), for: UIControl.Event.touchUpInside)
         button.isEnabled = false
         return button
     }()
@@ -69,10 +69,10 @@ class ForgotPassword: UIViewController {
         
         if isFormValid {
             sendEmailButton.isEnabled = true
-            sendEmailButton.setTitleColor(.white, for: .normal)
+            sendEmailButton.setTitleColor(.white, for: UIControl.State.normal)
         } else {
             sendEmailButton.isEnabled = false
-            sendEmailButton.setTitleColor(UIColor(white: 1.0, alpha: 0.55), for: .normal)
+            sendEmailButton.setTitleColor(UIColor(white: 1.0, alpha: 0.55), for: UIControl.State.normal)
         }
     }
     

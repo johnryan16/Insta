@@ -24,7 +24,7 @@ class HomePostCell: UICollectionViewCell {
             
             guard let postImageUrl = post?.imageUrl else { return }
             
-            likeButton.setImage(post?.hasLiked == true ? #imageLiteral(resourceName: "like_selected").withRenderingMode(.alwaysOriginal) : #imageLiteral(resourceName: "like_unselected").withRenderingMode(.alwaysOriginal), for: .normal)
+            likeButton.setImage(post?.hasLiked == true ? #imageLiteral(resourceName: "like_selected").withRenderingMode(.alwaysOriginal) : #imageLiteral(resourceName: "like_unselected").withRenderingMode(.alwaysOriginal), for: UIControl.State.normal)
             
             photoImageView.loadImage(urlString: postImageUrl)
             
@@ -45,15 +45,15 @@ class HomePostCell: UICollectionViewCell {
     fileprivate func setupAttributedCaption() {
         guard let post = self.post else { return }
         
-        let attributedText = NSMutableAttributedString(string: post.user.username, attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14)])
+        let attributedText = NSMutableAttributedString(string: post.user.username, attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
         
-        attributedText.append(NSAttributedString(string: " \(post.caption)", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14)]))
+        attributedText.append(NSAttributedString(string: " \(post.caption)", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14)]))
         
-        attributedText.append(NSAttributedString(string: "\n\n", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 4)]))
+        attributedText.append(NSAttributedString(string: "\n\n", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 4)]))
         
         let timeAgoDisplay = post.creationDate.timeAgoDisplay()
         
-        attributedText.append(NSAttributedString(string: timeAgoDisplay, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.gray]))
+        attributedText.append(NSAttributedString(string: timeAgoDisplay, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.gray]))
         
         captionLabel.attributedText = attributedText
     }
@@ -81,15 +81,15 @@ class HomePostCell: UICollectionViewCell {
     
     let optionsButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("•••", for: .normal)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitle("•••", for: UIControl.State.normal)
+        button.setTitleColor(.black, for: UIControl.State.normal)
         return button
     }()
     
     lazy var likeButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "like_unselected").withRenderingMode(.alwaysOriginal), for: .normal)
-        button.addTarget(self, action: #selector(handleLike), for: .touchUpInside)
+        button.setImage(#imageLiteral(resourceName: "like_unselected").withRenderingMode(.alwaysOriginal), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(handleLike), for: UIControl.Event.touchUpInside)
         return button
     }()
     
@@ -100,8 +100,8 @@ class HomePostCell: UICollectionViewCell {
     
     lazy var commentButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "comment").withRenderingMode(.alwaysOriginal), for: .normal)
-        button.addTarget(self, action: #selector(handleComment), for: .touchUpInside)
+        button.setImage(#imageLiteral(resourceName: "comment").withRenderingMode(.alwaysOriginal), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(handleComment), for: UIControl.Event.touchUpInside)
         return button
     }()
     
@@ -114,13 +114,13 @@ class HomePostCell: UICollectionViewCell {
     
     let sendMessageButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "send2").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "send2").withRenderingMode(.alwaysOriginal), for: UIControl.State.normal)
         return button
     }()
     
     let bookmarkButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "ribbon").withRenderingMode(.alwaysOriginal), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "ribbon").withRenderingMode(.alwaysOriginal), for: UIControl.State.normal)
         return button
     }()
     

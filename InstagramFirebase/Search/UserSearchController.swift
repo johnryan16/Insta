@@ -21,7 +21,6 @@ class UserSearchController: UICollectionViewController, UICollectionViewDelegate
     }()
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
         if searchText.isEmpty {
             filteredUsers = []
         } else {
@@ -106,9 +105,7 @@ class UserSearchController: UICollectionViewController, UICollectionViewDelegate
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! UserSearchCell
-        
         cell.user = filteredUsers[indexPath.item]
-        
         return cell
     }
     

@@ -31,17 +31,17 @@ class CommentInputAccessoryView: UIView {
     
     fileprivate let submitButton: UIButton = {
         let sb = UIButton(type: .system)
-        sb.setTitle("Submit", for: .normal)
-        sb.setTitleColor(.black, for: .normal)
+        sb.setTitle("Submit", for: UIControl.State.normal)
+        sb.setTitleColor(.black, for: UIControl.State.normal)
         sb.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        sb.addTarget(self, action: #selector(handleSubmit), for: .touchUpInside)
+        sb.addTarget(self, action: #selector(handleSubmit), for: UIControl.Event.touchUpInside)
         return sb
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        autoresizingMask = .flexibleHeight
+        autoresizingMask = UIView.AutoresizingMask.flexibleHeight
         backgroundColor = .white
         
         addSubview(submitButton)

@@ -52,7 +52,7 @@ class LoginInputAccessoryView: UIView, UITextFieldDelegate, UINavigationControll
         tf.clearButtonMode = .whileEditing
         tf.enablesReturnKeyAutomatically = true
         tf.returnKeyType = .next
-        tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
+        tf.addTarget(self, action: #selector(handleTextInputChange), for: UIControl.Event.editingChanged)
         return tf
     }()
     
@@ -66,27 +66,27 @@ class LoginInputAccessoryView: UIView, UITextFieldDelegate, UINavigationControll
         tf.clearButtonMode = .whileEditing
         tf.enablesReturnKeyAutomatically = true
         tf.returnKeyType = .go
-        tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
+        tf.addTarget(self, action: #selector(handleTextInputChange), for: UIControl.Event.editingChanged)
         return tf
     }()
     
     let loginButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Login", for: .normal)
+        button.setTitle("Login", for: UIControl.State.normal)
         button.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
         button.layer.cornerRadius = 5
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
+        button.setTitleColor(.white, for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(handleLogin), for: UIControl.Event.touchUpInside)
         button.isEnabled = false
         return button
     }()
     
     let userCallBiometricsButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Face ID!", for: .normal)
+        button.setTitle("Face ID!", for: UIControl.State.normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.addTarget(self, action: #selector(handleUserRequestBiometrics), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleUserRequestBiometrics), for: UIControl.Event.touchUpInside)
         return button
     }()
     
@@ -99,19 +99,19 @@ class LoginInputAccessoryView: UIView, UITextFieldDelegate, UINavigationControll
     }()
     let resetPasswordButton: UIButton = {
         let button = UIButton(type: .system)
-        let attributedTitle = NSMutableAttributedString(string: "Reset Password", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.rgb(red: 17, green: 154, blue: 237)])
-        button.setAttributedTitle(attributedTitle, for: .normal)
-        button.addTarget(self, action: #selector(handleForgotPassword), for: .touchUpInside)
+        let attributedTitle = NSMutableAttributedString(string: "Reset Password", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.rgb(red: 17, green: 154, blue: 237)])
+        button.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(handleForgotPassword), for: UIControl.Event.touchUpInside)
         return button
     }()
     
     let dontHaveAccountButton: UIButton = {
         let button = UIButton(type: .system)
-        let attributedTitle = NSMutableAttributedString(string: "Don't have an account?  ", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray])
+        let attributedTitle = NSMutableAttributedString(string: "Don't have an account?  ", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.lightGray])
         
-        attributedTitle.append(NSAttributedString(string: "Sign Up", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.rgb(red: 17, green: 154, blue: 237)]))
-        button.setAttributedTitle(attributedTitle, for: .normal)
-        button.addTarget(self, action: #selector(handleShowSignUp), for: .touchUpInside)
+        attributedTitle.append(NSAttributedString(string: "Sign Up", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.rgb(red: 17, green: 154, blue: 237)]))
+        button.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(handleShowSignUp), for: UIControl.Event.touchUpInside)
         return button
     }()
     

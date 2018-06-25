@@ -13,8 +13,8 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
     
     let plusPhotoButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "plus_photo").withRenderingMode(.alwaysOriginal), for: .normal)
-        button.addTarget(self, action: #selector(handlePlusPhoto), for: .touchUpInside)
+        button.setImage(#imageLiteral(resourceName: "plus_photo").withRenderingMode(.alwaysOriginal), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(handlePlusPhoto), for: UIControl.Event.touchUpInside)
         return button
     }()
     
@@ -26,17 +26,18 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
         
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
-            plusPhotoButton.setImage(editedImage.withRenderingMode(.alwaysOriginal), for: .normal)
-        } else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
-            plusPhotoButton.setImage(originalImage.withRenderingMode(.alwaysOriginal), for: .normal)
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        
+        if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
+            plusPhotoButton.setImage(editedImage.withRenderingMode(.alwaysOriginal), for: UIControl.State.normal)
+        } else if let originalImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            plusPhotoButton.setImage(originalImage.withRenderingMode(.alwaysOriginal), for: UIControl.State.normal)
         }
         plusPhotoButton.layer.cornerRadius = plusPhotoButton.frame.width/2
         plusPhotoButton.layer.masksToBounds = true
         plusPhotoButton.layer.borderColor = UIColor.black.cgColor
         plusPhotoButton.layer.borderWidth = 3
-        
+
         dismiss(animated: true, completion: nil)
     }
     
@@ -48,7 +49,7 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
         tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
         tf.borderStyle = .roundedRect
         tf.font = UIFont.systemFont(ofSize: 14)
-        tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
+        tf.addTarget(self, action: #selector(handleTextInputChange), for: UIControl.Event.editingChanged)
         return tf
     }()
     
@@ -72,7 +73,7 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
         tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
         tf.borderStyle = .roundedRect
         tf.font = UIFont.systemFont(ofSize: 14)
-        tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
+        tf.addTarget(self, action: #selector(handleTextInputChange), for: UIControl.Event.editingChanged)
         return tf
     }()
     
@@ -83,19 +84,19 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
         tf.backgroundColor = UIColor(white: 0, alpha: 0.03)
         tf.borderStyle = .roundedRect
         tf.font = UIFont.systemFont(ofSize: 14)
-        tf.addTarget(self, action: #selector(handleTextInputChange), for: .editingChanged)
+        tf.addTarget(self, action: #selector(handleTextInputChange), for: UIControl.Event.editingChanged)
         return tf
     }()
     
     let signUpButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Sign Up", for: .normal)
+        button.setTitle("Sign Up", for: UIControl.State.normal)
         button.backgroundColor = UIColor.rgb(red: 149, green: 204, blue: 244)
         button.layer.cornerRadius = 5
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.white, for: UIControl.State.normal)
         
-        button.addTarget(self, action: #selector(handleSignUp), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleSignUp), for: UIControl.Event.touchUpInside)
         
         button.isEnabled = false
         
@@ -114,7 +115,7 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
             }
             print("Successfully created User", user?.user.uid ?? "")
             guard let image = self.plusPhotoButton.imageView?.image else { return }
-            guard let uploadDate = UIImageJPEGRepresentation(image, 0.3) else { return }
+            guard let uploadDate = image.jpegData(compressionQuality: 0.3) else { return }
             let filename = NSUUID().uuidString
            
             Storage.storage().reference().child("profile_images").child(filename).putData(uploadDate, metadata: nil, completion: { (metadata, nil) in
@@ -151,24 +152,24 @@ class SignUpController: UIViewController, UIImagePickerControllerDelegate, UINav
         }
     }
 
-    //TODO: Implement Email Verification Properly
+    // TODO: Implement Email Verification Properly
     //                        Auth.auth().currentUser?.sendEmailVerification(completion: { (err) in
     //                            if let err = err {
     //                                print("Failed to Send Verification Email", err)
     //                            }
-    //                            print("Successfully send verification email")
+    //                            print("Successfully sent verification email")
     //                        })
     
     
     let alreadyHaveAccountButton: UIButton = {
     let button = UIButton(type: .system)
-    let attributedTitle = NSMutableAttributedString(string: "Already have an account?  ", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray])
+    let attributedTitle = NSMutableAttributedString(string: "Already have an account?  ", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.lightGray])
     
-    attributedTitle.append(NSAttributedString(string: "Sign In", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.rgb(red: 17, green: 154, blue: 237)]))
+    attributedTitle.append(NSAttributedString(string: "Sign In", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedString.Key.foregroundColor: UIColor.rgb(red: 17, green: 154, blue: 237)]))
     
-    button.setAttributedTitle(attributedTitle, for: .normal)
+    button.setAttributedTitle(attributedTitle, for: UIControl.State.normal)
         
-    button.addTarget(self, action: #selector(handleAlreadyHaveAccount), for: .touchUpInside)
+    button.addTarget(self, action: #selector(handleAlreadyHaveAccount), for: UIControl.Event.touchUpInside)
     return button
     }()
     

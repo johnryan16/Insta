@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
 
     var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         
         let userDefaults = UserDefaults.standard
@@ -107,7 +107,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
         Messaging.messaging().delegate = self
         UNUserNotificationCenter.current().delegate = self
         
-        guard let myApplication = UIApplication.shared as UIApplication? else { return }
+        //MARK: Turn Back On after completing profile edit page
+//        guard let myApplication = UIApplication.shared as UIApplication? else { return }
         
         let options: UNAuthorizationOptions = [.alert, .badge, .sound]
         UNUserNotificationCenter.current().requestAuthorization(options: options) { (granted, err) in
@@ -121,7 +122,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
                 print("Auth denied.")
             }
         }
-        myApplication.registerForRemoteNotifications()
+        //MARK: Turn Back On after completing profile edit page
+//        myApplication.registerForRemoteNotifications()
     }
     
 //    func handleFcmTokenStatus() {

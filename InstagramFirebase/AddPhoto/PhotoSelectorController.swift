@@ -22,7 +22,7 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
         
         collectionView?.register(PhotoSelectorCell.self, forCellWithReuseIdentifier: cellId)
         
-        collectionView?.register(PhotoSelectorHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerId)
+        collectionView?.register(PhotoSelectorHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerId)
         
         handleAuthStatus()
         
@@ -46,7 +46,7 @@ class PhotoSelectorController: UICollectionViewController, UICollectionViewDeleg
         collectionView.reloadData()
         
         let indexPath = IndexPath(item: 0, section: 0)
-        collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
+        collectionView.scrollToItem(at: indexPath, at: UICollectionView.ScrollPosition.bottom, animated: true)
     }
     
     var selectedImage: UIImage?

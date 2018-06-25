@@ -14,9 +14,9 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate, UIViewC
     
     let dismissButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "right_arrow"), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "right_arrow"), for: UIControl.State.normal)
         button.tintColor = UIColor.lightGray
-        button.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleDismiss), for: UIControl.Event.touchUpInside)
         return button
     }()
     
@@ -26,8 +26,8 @@ class CameraController: UIViewController, AVCapturePhotoCaptureDelegate, UIViewC
     
     let capturePhotoButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "capture_photo@1x"), for: .normal)
-        button.addTarget(self, action: #selector(handleCapturePhoto), for: .touchUpInside)
+        button.setImage(#imageLiteral(resourceName: "capture_photo@1x"), for: UIControl.State.normal)
+        button.addTarget(self, action: #selector(handleCapturePhoto), for: UIControl.Event.touchUpInside)
         button.tintColor = .white
         return button
     }()

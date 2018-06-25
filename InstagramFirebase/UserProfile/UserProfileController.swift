@@ -19,11 +19,8 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
     var isGridView = true
     
     func didPressEditProfile() {
-        let layout = UICollectionViewFlowLayout()
-        let testInstance = UserEditor(collectionViewLayout: layout)
-        
+        let testInstance = UserProfileEditor()
         let navController = UINavigationController(rootViewController: testInstance)
-        
         present(navController, animated: true, completion: nil)
     }
     
@@ -44,7 +41,7 @@ class UserProfileController: UICollectionViewController, UICollectionViewDelegat
         
         fetchUser()
         
-        collectionView?.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "headerId")
+        collectionView?.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "headerId")
         
         collectionView?.register(UserProfilePhotoCell.self, forCellWithReuseIdentifier: cellId)
         
